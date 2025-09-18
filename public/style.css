@@ -1,0 +1,51 @@
+/* Fonte padrão do Mercado Livre */
+@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap');
+
+body {
+  font-family: 'Roboto', Arial, sans-serif;
+  background: #f0f0f0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  margin: 0;
+}
+
+.container {
+  display: flex;
+  gap: 30px;
+}
+
+.roleta-container {
+  background: white;
+  padding: 20px;
+  border-radius: 15px;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+  text-align: center;
+}
+
+canvas {
+  display: block;
+  margin: 0 auto;
+}
+
+button {
+  background-color: #FFE600 !important;  /* força amarelo */
+  color: #000000 !important;             /* texto preto */
+  border: none;
+  padding: 12px 20px;
+  border-radius: 8px;
+  cursor: pointer;
+  margin-top: 20px;
+  font-size: 16px;
+  font-family: 'Roboto', Arial, sans-serif;
+  font-weight: 700;
+  transition: all 0.3s ease;
+}
+
+button:hover {
+  background-color: #FFD500 !important;  /* força hover amarelo */
+  transform: translateY(-2px);
+  box-shadow: 0 4px 6px rgba(0,0,0,0.2);
+}
+
