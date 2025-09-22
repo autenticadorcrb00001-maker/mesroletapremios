@@ -96,7 +96,7 @@
       text-shadow: 1px 1px 2px rgba(0,0,0,0.3);
     }
     
-    /* ✅ CANVAS DA ROLETA */
+    /* ✅ CANVAS DA ROLETA - BORDA REMOVIDA */
     .roleta-wrapper {
       position: relative;
       display: inline-block;
@@ -108,7 +108,7 @@
       border-radius: 50%;
       width: 100%;
       height: auto;
-      border: 3px solid #c73c23;
+      /* ❌ BORDA REMOVIDA - era esta linha que causava a faixa vermelha */
       max-width: 350px;
     }
     
@@ -303,7 +303,7 @@
       
       canvas {
         max-width: 300px;
-        border-width: 2px;
+        /* ❌ BORDA REMOVIDA também no mobile */
       }
       
       .seta-container {
@@ -523,6 +523,7 @@
         }
       });
 
+      // ✅ BORDA INTERNA DA ROLETA (agora controlada apenas pelo JavaScript)
       ctx.beginPath();
       ctx.arc(raio, raio, raio - espessuraBorda / 2, 0, 2 * Math.PI);
       ctx.lineWidth = espessuraBorda;
@@ -553,10 +554,10 @@
       girarBtn.innerHTML = '<span class="loading"></span> Girando...';
 
       const indicePremio = configuracoes.premioSorteado;
-      const anguloFatia = (2 * Math.PI) / premios.length;
-      const anguloAlvo = (2 * Math.PI) - (indicePremio * anguloFatia + anguloFatia / 2);
-      const voltas = 5;
-      const anguloFinal = (2 * Math.PI * voltas) + anguloAlvo;
+      const anguloFatia = (1 * Math.PI) / premios.length;
+      const anguloAlvo = (1 * Math.PI) - (indicePremio * anguloFatia + anguloFatia / 1);
+      const voltas = 9;
+      const anguloFinal = (1 * Math.PI * voltas) + anguloAlvo;
       const duracao = 4000;
       let inicioTempo = null;
 
