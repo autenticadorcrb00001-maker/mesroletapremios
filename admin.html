@@ -6,7 +6,12 @@
   <title>Roleta de Prêmios - Shopee</title>
   <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
   <style>
-    * { margin: 0; padding: 0; box-sizing: border-box; }
+    * { 
+      margin: 0; 
+      padding: 0; 
+      box-sizing: border-box; 
+    }
+    
     html, body {
       width: 100%;
       height: 100%;
@@ -14,16 +19,25 @@
       background-color: #f04d2e;
       overflow-x: hidden;
     }
-    body { display: flex; justify-content: center; align-items: center; }
+    
+    body { 
+      display: flex; 
+      justify-content: center; 
+      align-items: center;
+      min-height: 100vh;
+      padding: 10px;
+    }
+    
     .container {
       display: flex;
       flex-direction: column;
       align-items: center;
-      gap: 20px;
+      gap: 15px;
       width: 100%;
       max-width: 450px;
-      padding: 15px;
+      padding: 10px;
     }
+    
     .roleta-container {
       background: #f04d2e;
       padding: 20px;
@@ -34,54 +48,117 @@
       width: 100%;
       max-width: 400px;
     }
-    canvas {
-      display: block;
-      margin: 20px auto;
-      border-radius: 50%;
-      width: 100%;
-      height: auto;
-      border: 3px solid #c73c23;
-    }
-    #descricao-roleta {
-      font-weight: 700;
-      font-size: 1.2rem;
-      margin-bottom: 12px;
-      color: #ffffff;
-      text-align: center;
-      width: 100%;
-      word-wrap: break-word;
-    }
-    /* ✅ CONTROLE DE TAMANHO DA LOGO SUPERIOR */
-    #logo-cima {
-      margin-bottom: 10px;
-      width: 150px;
+    
+    /* ✅ LOGO SUPERIOR */
+    .logo-superior {
+      margin-bottom: 15px;
+      width: 160px;
       max-width: 100%;
       height: auto;
       display: block;
       margin-left: auto;
       margin-right: auto;
+      border-radius: 10px;
     }
+    
+    /* ✅ CONTAINER DAS DESCRIÇÕES ADICIONAIS */
+    .descricoes-container {
+      background: rgba(255, 255, 255, 0.1);
+      padding: 12px 15px;
+      border-radius: 12px;
+      margin-bottom: 15px;
+      border: 2px solid rgba(255, 255, 255, 0.2);
+    }
+    
+    .descricao-adicional {
+      color: #ffffff;
+      text-align: center;
+      margin-bottom: 6px;
+      font-size: 0.95rem;
+      font-weight: 500;
+      line-height: 1.3;
+    }
+    
+    .descricao-adicional:last-child {
+      margin-bottom: 0;
+    }
+    
+    /* ✅ DESCRIÇÃO PRINCIPAL */
+    #descricao-roleta {
+      font-weight: 700;
+      font-size: 1.3rem;
+      margin-bottom: 15px;
+      color: #ffffff;
+      text-align: center;
+      width: 100%;
+      word-wrap: break-word;
+      line-height: 1.4;
+      text-shadow: 1px 1px 2px rgba(0,0,0,0.3);
+    }
+    
+    /* ✅ CANVAS DA ROLETA */
+    .roleta-wrapper {
+      position: relative;
+      display: inline-block;
+      margin: 10px 0;
+    }
+    
+    canvas {
+      display: block;
+      border-radius: 50%;
+      width: 100%;
+      height: auto;
+      border: 3px solid #c73c23;
+      max-width: 350px;
+    }
+    
+    /* ✅ SETA ANIMADA */
+    .seta-container {
+      position: absolute;
+      top: 50%;
+      right: -20px;
+      transform: translateY(-50%);
+      z-index: 10;
+      width: 70px;
+      height: 70px;
+    }
+    
+    .seta {
+      width: 100%;
+      height: 100%;
+      filter: drop-shadow(2px 2px 3px rgba(0,0,0,0.4));
+      animation: pulsar 2s infinite ease-in-out;
+    }
+    
+    /* ✅ BOTÃO GIRAR */
     button {
       background-color: #ff6b47;
       color: #fff;
       border: none;
-      padding: 14px 25px;
+      padding: 16px 30px;
       border-radius: 12px;
       cursor: pointer;
       font-size: 18px;
       font-weight: 700;
       transition: all 0.3s ease;
       margin-top: 20px;
+      width: 100%;
+      max-width: 300px;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.2);
     }
+    
     button:hover {
-      transform: translateY(-3px) scale(1.02);
-      box-shadow: 0 6px 10px rgba(0,0,0,0.25);
+      transform: translateY(-3px);
+      box-shadow: 0 6px 12px rgba(0,0,0,0.3);
     }
+    
     button:disabled {
       opacity: 0.6;
       cursor: not-allowed;
       transform: none;
     }
+    
+    /* ✅ POPUP */
     .popup {
       position: fixed;
       top: 50%;
@@ -89,153 +166,252 @@
       transform: translate(-50%, -50%) scale(0);
       background: #f04d2e;
       color: #ffffff;
-      padding: 30px 25px;
+      padding: 25px;
       border-radius: 20px;
-      box-shadow: 0 15px 30px rgba(0,0,0,0.25);
+      box-shadow: 0 20px 40px rgba(0,0,0,0.3);
       text-align: center;
-      z-index: 9999;
+      z-index: 1000;
       width: 90%;
-      max-width: 380px;
+      max-width: 350px;
       transition: transform 0.4s ease;
+      border: 3px solid rgba(255,255,255,0.2);
     }
-    .popup.show { transform: translate(-50%, -50%) scale(1); }
+    
+    .popup.show { 
+      transform: translate(-50%, -50%) scale(1); 
+    }
+    
     .popup h2 {
       font-weight: 700;
-      font-size: 24px;
+      font-size: 22px;
       margin-bottom: 12px;
+      color: #fff;
     }
+    
     .popup p {
-      font-size: 16px;
+      font-size: 15px;
       margin-bottom: 20px;
       line-height: 1.5;
+      opacity: 0.9;
     }
+    
     .whatsapp-btn {
       display: inline-block;
       background: #25D366;
       color: white;
       text-decoration: none;
-      padding: 14px 20px;
-      border-radius: 12px;
+      padding: 14px 25px;
+      border-radius: 10px;
       font-weight: 700;
       transition: all 0.3s ease;
+      font-size: 16px;
+      box-shadow: 0 3px 6px rgba(0,0,0,0.2);
     }
+    
     .whatsapp-btn:hover {
       background: #1ebe57;
       transform: translateY(-2px);
-      box-shadow: 0 4px 8px rgba(0,0,0,0.25);
+      box-shadow: 0 5px 10px rgba(0,0,0,0.3);
     }
+    
+    /* ✅ CONFETES */
     .confete {
       position: fixed;
-      width: 10px;
-      height: 10px;
+      width: 12px;
+      height: 12px;
       opacity: 0.9;
       pointer-events: none;
       border-radius: 50%;
-      z-index: 2;
-      animation: subirConfete linear forwards;
+      z-index: 900;
+      animation: subirConfete 3s linear forwards;
     }
     
-    /* Estilos para a seta animada */
-    .seta-container {
-      position: absolute;
-      top: 50%;
-      right: 10px;
-      transform: translateY(-50%);
-      z-index: 10;
-      width: 60px;
-      height: 60px;
-    }
-    .seta {
-      width: 100%;
-      height: 100%;
-      filter: drop-shadow(2px 2px 2px rgba(0,0,0,0.3));
-    }
-    
-    @keyframes pulsar {
-      0% { transform: translateY(0px) scale(1); }
-      50% { transform: translateY(-5px) scale(1.1); }
-      100% { transform: translateY(0px) scale(1); }
-    }
-
-    @keyframes subirConfete {
-      0% { transform: translateY(0) rotate(0deg); opacity: 1; }
-      100% { transform: translateY(-100vh) rotate(720deg); opacity: 0; }
-    }
-    
-    .descricao-adicional {
-      color: #ffffff;
-      text-align: center;
-      margin-bottom: 8px;
-      font-size: 1rem;
-      font-weight: 500;
-    }
-    
-    @media (max-width: 500px) {
-      button { width: 90%; font-size: 16px; }
-      #descricao-roleta { font-size: 1rem; }
-      .popup { padding: 20px 15px; }
-      .seta-container {
-        width: 50px;
-        height: 50px;
-        right: 5px;
-      }
-      .descricao-adicional {
-        font-size: 0.9rem;
-      }
-      #logo-cima {
-        width: 120px;
-      }
-    }
-
-    /* Loading spinner */
+    /* ✅ LOADING SPINNER */
     .loading {
       display: inline-block;
-      width: 20px;
-      height: 20px;
-      border: 3px solid #ffffff;
+      width: 18px;
+      height: 18px;
+      border: 2px solid #ffffff;
       border-radius: 50%;
       border-top-color: transparent;
       animation: spin 1s ease-in-out infinite;
-      margin-right: 10px;
+      margin-right: 8px;
     }
-
+    
+    /* ✅ ANIMAÇÕES */
+    @keyframes pulsar {
+      0% { transform: translateY(0px) scale(1); }
+      50% { transform: translateY(-8px) scale(1.15); }
+      100% { transform: translateY(0px) scale(1); }
+    }
+    
+    @keyframes subirConfete {
+      0% { 
+        transform: translateY(0) rotate(0deg) scale(1); 
+        opacity: 1; 
+      }
+      100% { 
+        transform: translateY(-100vh) rotate(720deg) scale(0.5); 
+        opacity: 0; 
+      }
+    }
+    
     @keyframes spin {
       to { transform: rotate(360deg); }
+    }
+    
+    /* ✅ MOBILE FIRST - RESPONSIVIDADE */
+    @media (max-width: 480px) {
+      body {
+        padding: 5px;
+        align-items: flex-start;
+        min-height: 100vh;
+      }
+      
+      .container {
+        gap: 10px;
+        padding: 5px;
+        max-width: 100%;
+      }
+      
+      .roleta-container {
+        padding: 15px;
+        border-radius: 15px;
+        max-width: 100%;
+      }
+      
+      .logo-superior {
+        width: 130px;
+        margin-bottom: 12px;
+      }
+      
+      .descricoes-container {
+        padding: 10px 12px;
+        margin-bottom: 12px;
+      }
+      
+      .descricao-adicional {
+        font-size: 0.85rem;
+        margin-bottom: 5px;
+      }
+      
+      #descricao-roleta {
+        font-size: 1.1rem;
+        margin-bottom: 12px;
+        line-height: 1.3;
+      }
+      
+      canvas {
+        max-width: 300px;
+        border-width: 2px;
+      }
+      
+      .seta-container {
+        width: 50px;
+        height: 50px;
+        right: -15px;
+      }
+      
+      button {
+        padding: 14px 20px;
+        font-size: 16px;
+        margin-top: 15px;
+        max-width: 100%;
+      }
+      
+      .popup {
+        padding: 20px;
+        max-width: 90%;
+      }
+      
+      .popup h2 {
+        font-size: 20px;
+      }
+      
+      .popup p {
+        font-size: 14px;
+      }
+      
+      .whatsapp-btn {
+        padding: 12px 20px;
+        font-size: 15px;
+      }
+    }
+    
+    @media (max-width: 360px) {
+      .logo-superior {
+        width: 110px;
+      }
+      
+      canvas {
+        max-width: 280px;
+      }
+      
+      .seta-container {
+        width: 45px;
+        height: 45px;
+        right: -12px;
+      }
+      
+      #descricao-roleta {
+        font-size: 1rem;
+      }
+      
+      .descricao-adicional {
+        font-size: 0.8rem;
+      }
+    }
+    
+    /* ✅ EFEITO DE FOCO PARA ACESSIBILIDADE */
+    button:focus,
+    .whatsapp-btn:focus {
+      outline: 3px solid rgba(255,255,255,0.5);
+      outline-offset: 2px;
     }
   </style>
 </head>
 <body>
   <div class="container">
     <div class="roleta-container">
-      <img id="logo-cima" src="assets/logo1.png" alt="Logo Superior">
+      <!-- ✅ LOGO SUPERIOR -->
+      <img class="logo-superior" src="assets/logo1.png" alt="Logo Shopee" id="logo-superior">
       
-      <div class="descricao-adicional" id="descricao-adicional-1">Participe da promoção especial</div>
-      <div class="descricao-adicional" id="descricao-adicional-2">Gire a roleta e ganhe descontos incríveis!</div>
+      <!-- ✅ CONTAINER DAS DUAS DESCRIÇÕES ADICIONAIS -->
+      <div class="descricoes-container">
+        <div class="descricao-adicional" id="descricao-adicional-1">🎁 Participe da promoção especial</div>
+        <div class="descricao-adicional" id="descricao-adicional-2">⭐ Gire a roleta e ganhe descontos incríveis!</div>
+      </div>
       
+      <!-- ✅ DESCRIÇÃO PRINCIPAL -->
       <h2 id="descricao-roleta">Mês de prêmios: Roleta premiada<br>Shopee</h2>
       
-      <div style="position: relative; display: inline-block;">
+      <!-- ✅ ROLETA COM SETA -->
+      <div class="roleta-wrapper">
         <canvas id="roleta" width="400" height="400"></canvas>
         <div class="seta-container">
-          <img class="seta" src="assets/seta.png" alt="Seta" id="seta-animada">
+          <img class="seta" src="assets/seta.png" alt="Seta indicadora" id="seta-animada">
         </div>
       </div>
       
+      <!-- ✅ BOTÃO GIRAR -->
       <button id="girar-btn">GIRAR A ROLETA</button>
     </div>
   </div>
 
+  <!-- ✅ POPUP DE PRÊMIO -->
   <div class="popup" id="popup">
     <h2 id="popup-titulo">Parabéns! 🎉</h2>
     <p id="popup-texto">
       Você ganhou um <strong>cupom exclusivo de desconto</strong> baseado na sua última compra na Shopee.<br>
       <strong>Exemplo</strong>: se você comprou um produto de <strong>R$1500</strong>, seu cupom será do mesmo valor.
     </p>
-    <a class="whatsapp-btn" id="whatsapp-link" href="https://wa.me/SEUNUMERO" target="_blank">Receber seu Cupom</a>
+    <a class="whatsapp-btn" id="whatsapp-link" href="https://wa.me/SEUNUMERO" target="_blank">
+      📱 Receber seu Cupom
+    </a>
   </div>
 
   <script>
-    // ✅ CONFIGURAÇÕES CORRIGIDAS
+    // ✅ CONFIGURAÇÕES
     let configuracoes = {
       corFundoTela: '#f04d2e',
       corFundoRoleta: '#f04d2e',
@@ -255,33 +431,33 @@
       textoBotaoWhatsapp: 'Receber seu Cupom',
       fontePersonalizada: 'Roboto',
       corDivisorFatias: '#ffffff',
-      descricaoAdicional1: 'Participe da promoção especial',
-      descricaoAdicional2: 'Gire a roleta e ganhe descontos incríveis!'
+      descricaoAdicional1: '🎁 Participe da promoção especial',
+      descricaoAdicional2: '⭐ Gire a roleta e ganhe descontos incríveis!'
     };
 
-    // ✅ VARIÁVEIS GLOBAIS CORRIGIDAS
+    // ✅ VARIÁVEIS GLOBAIS
     let anguloAtual = 0;
     let animacaoRodando = false;
     const canvas = document.getElementById("roleta");
     const ctx = canvas.getContext("2d");
     const raio = canvas.width / 2;
-    const espessuraBorda = 22;
+    const espessuraBorda = 20;
 
-    // ✅ PRÊMIOS COM IMAGENS PADRÃO
+    // ✅ PRÊMIOS
     const premios = [
-      { img: "assets/p1.png", imgSize: 70, nome: "Prêmio 1" },
-      { img: "assets/p2.png", imgSize: 70, nome: "Prêmio 2" },
-      { img: "assets/p3.png", imgSize: 70, nome: "Prêmio 3" },
-      { img: "assets/p4.png", imgSize: 70, nome: "Prêmio 4" },
-      { img: "assets/p5.png", imgSize: 70, nome: "Prêmio 5" },
-      { img: "assets/p6.png", imgSize: 70, nome: "Prêmio 6" }
+      { img: "assets/p1.png", imgSize: 65, nome: "Prêmio 1" },
+      { img: "assets/p2.png", imgSize: 65, nome: "Prêmio 2" },
+      { img: "assets/p3.png", imgSize: 65, nome: "Prêmio 3" },
+      { img: "assets/p4.png", imgSize: 65, nome: "Prêmio 4" },
+      { img: "assets/p5.png", imgSize: 65, nome: "Prêmio 5" },
+      { img: "assets/p6.png", imgSize: 65, nome: "Prêmio 6" }
     ];
 
-    // ✅ IMAGENS CORRIGIDAS
+    // ✅ IMAGENS
     const logoCentro = new Image();
     const setaImg = new Image();
 
-    // ✅ FUNÇÃO PARA CARREGAR CONFIGURAÇÕES
+    // ✅ CARREGAR CONFIGURAÇÕES DO PAINEL
     function carregarConfiguracoes() {
       try {
         const configSalvas = localStorage.getItem('configRoleta');
@@ -295,7 +471,7 @@
       }
     }
 
-    // ✅ FUNÇÃO PARA APLICAR CONFIGURAÇÕES
+    // ✅ APLICAR CONFIGURAÇÕES
     function aplicarConfiguracoes() {
       document.body.style.fontFamily = configuracoes.fontePersonalizada + ", Arial, sans-serif";
       document.body.style.backgroundColor = configuracoes.corFundoTela;
@@ -320,12 +496,11 @@
       document.getElementById('descricao-adicional-2').innerHTML = configuracoes.descricaoAdicional2;
     }
 
-    // ✅ FUNÇÃO PRINCIPAL PARA DESENHAR A ROLETA
+    // ✅ DESENHAR ROLETA
     function desenharRoleta() {
       ctx.clearRect(0, 0, canvas.width, canvas.height);
       const anguloFatia = (2 * Math.PI) / premios.length;
 
-      // Desenhar fatias
       premios.forEach((premio, i) => {
         const inicio = anguloAtual + i * anguloFatia;
         const fim = inicio + anguloFatia;
@@ -338,27 +513,24 @@
         ctx.fillStyle = corFatia;
         ctx.fill();
 
-        // Desenhar imagem do prêmio
         if (premio._imgObj && premio._imgObj.complete) {
           ctx.save();
           ctx.translate(raio, raio);
           ctx.rotate(inicio + anguloFatia / 2);
           const imgSize = premio.imgSize || 60;
-          ctx.drawImage(premio._imgObj, raio - espessuraBorda - imgSize - 15, -imgSize/2, imgSize, imgSize);
+          ctx.drawImage(premio._imgObj, raio - espessuraBorda - imgSize - 12, -imgSize/2, imgSize, imgSize);
           ctx.restore();
         }
       });
 
-      // Desenhar borda
       ctx.beginPath();
       ctx.arc(raio, raio, raio - espessuraBorda / 2, 0, 2 * Math.PI);
       ctx.lineWidth = espessuraBorda;
       ctx.strokeStyle = configuracoes.corBordaRoleta;
       ctx.stroke();
 
-      // Desenhar logo central
       if (logoCentro.complete) {
-        const tamanhoLogo = 80;
+        const tamanhoLogo = 70;
         ctx.save();
         ctx.beginPath();
         ctx.arc(raio, raio, tamanhoLogo/2, 0, 2*Math.PI);
@@ -371,7 +543,7 @@
       }
     }
 
-    // ✅ FUNÇÃO PARA GIRAR A ROLETA
+    // ✅ GIRAR ROLETA
     function girarRoleta() {
       if (animacaoRodando) return;
       
@@ -393,7 +565,6 @@
         const tempoDecorrido = timestamp - inicioTempo;
         const progresso = Math.min(tempoDecorrido / duracao, 1);
         
-        // Efeito easeOut
         const progressoSuavizado = 1 - Math.pow(1 - progresso, 3);
         anguloAtual = progressoSuavizado * anguloFinal;
         
@@ -416,104 +587,78 @@
       requestAnimationFrame(animar);
     }
 
-    // ✅ FUNÇÃO PARA MOSTRAR POPUP
+    // ✅ MOSTRAR POPUP
     function mostrarPopupPremio() {
       const popup = document.getElementById('popup');
       popup.classList.add('show');
       gerarConfetes();
       
-      // Fechar popup após 5 segundos
       setTimeout(() => {
         popup.classList.remove('show');
       }, 5000);
     }
 
-    // ✅ FUNÇÃO PARA GERAR CONFETES
+    // ✅ GERAR CONFETES
     function gerarConfetes() {
-      const cores = ['#FFD700', '#FF6B6B', '#4ECDC4', '#FF8E53', '#6A0572'];
-      for (let i = 0; i < 80; i++) {
+      const cores = ['#FFD700', '#FF6B6B', '#4ECDC4', '#FF8E53', '#6A0572', '#1A535C'];
+      for (let i = 0; i < 60; i++) {
         setTimeout(() => {
           const confete = document.createElement('div');
           confete.className = 'confete';
           confete.style.backgroundColor = cores[Math.floor(Math.random() * cores.length)];
           confete.style.left = Math.random() * 100 + 'vw';
-          confete.style.width = (Math.random() * 10 + 5) + 'px';
+          confete.style.width = (Math.random() * 12 + 6) + 'px';
           confete.style.height = confete.style.width;
           confete.style.animationDuration = (Math.random() * 2 + 2) + 's';
           document.body.appendChild(confete);
           
           setTimeout(() => confete.remove(), 5000);
-        }, i * 30);
+        }, i * 50);
       }
     }
 
     // ✅ INICIALIZAÇÃO
     function inicializar() {
-      // Carregar imagens dos prêmios
       premios.forEach((premio, index) => {
         premio._imgObj = new Image();
         premio._imgObj.onload = () => {
-          if (index === premios.length - 1) {
-            desenharRoleta();
-          }
+          if (index === premios.length - 1) desenharRoleta();
         };
         premio._imgObj.onerror = () => {
-          console.log('Erro ao carregar imagem:', premio.img);
-          // Criar fallback visual
           premio._imgObj = criarFallbackPremio(index + 1);
         };
         premio._imgObj.src = premio.img;
       });
 
-      // Carregar logo central
       logoCentro.onload = desenharRoleta;
       logoCentro.onerror = () => {
-        console.log('Erro ao carregar logo central');
-        logoCentro.src = 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iODAiIGhlaWdodD0iODAiIHZpZXdCb3g9IjAgMCA4MCA4MCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPGNpcmNsZSBjeD0iNDAiIGN5PSI0MCIgcj0iMzUiIGZpbGw9IiNGRkYiLz4KPC9zdmc+';
+        logoCentro.src = 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNzAiIGhlaWdodD0iNzAiIHZpZXdCb3g9IjAgMCA3MCA3MCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPGNpcmNsZSBjeD0iMzUiIGN5PSIzNSIgcj0iMzAiIGZpbGw9IiNGRkYiLz4KPC9zdmc+';
       };
       logoCentro.src = 'assets/logo2.png';
 
-      // Carregar seta
       setaImg.onerror = () => {
-        console.log('Erro ao carregar seta');
-        // Fallback para seta SVG
-        document.getElementById('seta-animada').src = 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNjAiIGhlaWdodD0iNjAiIHZpZXdCb3g9IjAgMCA2MCA2MCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHBhdGggZD0iTTQ1IDMwTDI1IDQ1TDI1IDE1TDQ1IDMwWiIgZmlsbD0iI0ZGRiIvPgo8L3N2Zz4=';
+        document.getElementById('seta-animada').src = 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNzAiIGhlaWdodD0iNzAiIHZpZXdCb3g9IjAgMCA3MCA3MCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHBhdGggZD0iTTQ1IDM1TDI1IDUwTDI1IDIwTDQ1IDM1WiIgZmlsbD0iI0ZGRiIvPgo8L3N2Zz4=';
       };
       setaImg.src = 'assets/seta.png';
 
-      // Event listeners
       document.getElementById('girar-btn').addEventListener('click', girarRoleta);
-      
-      // Animar seta
-      setInterval(() => {
-        if (!animacaoRodando) {
-          document.getElementById('seta-animada').style.animation = 'pulsar 2s infinite';
-        }
-      }, 100);
-
-      // Carregar configurações
       carregarConfiguracoes();
-      
-      // Verificar atualizações a cada 3 segundos
       setInterval(carregarConfiguracoes, 3000);
     }
 
-    // ✅ FUNÇÃO FALLBACK PARA PRÊMIOS
+    // ✅ FALLBACK PARA IMAGENS
     function criarFallbackPremio(numero) {
       const canvas = document.createElement('canvas');
-      canvas.width = 100;
-      canvas.height = 100;
+      canvas.width = 100; canvas.height = 100;
       const ctx = canvas.getContext('2d');
       
-      // Fundo circular
       ctx.fillStyle = numero % 2 === 0 ? '#FF6B6B' : '#4ECDC4';
       ctx.beginPath();
       ctx.arc(50, 50, 40, 0, 2 * Math.PI);
       ctx.fill();
       
-      // Número
       ctx.fillStyle = '#FFFFFF';
-      ctx.font = 'bold 40px Arial';
+      ctx.font = 'bold 35px Arial';
       ctx.textAlign = 'center';
       ctx.textBaseline = 'middle';
       ctx.fillText(numero, 50, 50);
@@ -523,7 +668,6 @@
       return img;
     }
 
-    // ✅ INICIAR QUANDO A PÁGINA CARREGAR
     document.addEventListener('DOMContentLoaded', inicializar);
   </script>
 </body>
