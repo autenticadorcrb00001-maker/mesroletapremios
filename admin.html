@@ -103,8 +103,8 @@ html, body {
     font-family: 'Product Sans', 'Roboto', Arial, sans-serif;
 }
 #descricao-roleta span {
-    color: #1c7bff;   /* Azul da paleta */
-    font-weight: 700;  /* Negrito */
+    color: #1c7bff;
+    font-weight: 700;
 }
 
 /* --- CANVAS E SETA --- */
@@ -153,7 +153,7 @@ button {
     transition: all 0.3s ease;
     position: relative;
     z-index: 1;
-    font-family: 'Product Sans', 'Roboto', Arial, sans-serif; /* Play Store */
+    font-family: 'Product Sans', 'Roboto', Arial, sans-serif;
 }
 button:hover {
     transform: translateY(-3px);
@@ -322,7 +322,6 @@ function desenharRoleta() {
         const inicio = anguloAtual + i * anguloFatia;
         const fim = inicio + anguloFatia;
 
-        // Fatia
         ctx.beginPath();
         ctx.moveTo(raio, raio);
         ctx.arc(raio, raio, raio - espessuraBorda, inicio, fim);
@@ -330,43 +329,40 @@ function desenharRoleta() {
         ctx.fillStyle = i % 2 === 0 ? configuracoes.cores.fatiaPar : configuracoes.cores.fatiaImpar;
         ctx.fill();
 
-        // Imagem do prêmio
         const img = imagensPremios[i];
         if (img.complete) {
             const anguloMeio = inicio + anguloFatia / 2;
-            const configuracoesImagem = [
-                { distancia: 0.55, tamanho: 70, offsetX: 0, offsetY: 0 },
-                { distancia: 0.55, tamanho: 80, offsetX: 0, offsetY: 0 },
-                { distancia: 0.55, tamanho: 75, offsetX: 0, offsetY: 0 },
-                { distancia: 0.58, tamanho: 70, offsetX: 0, offsetY: 0 },
-                { distancia: 0.62, tamanho: 85, offsetX: 3, offsetY: 15 },
-                { distancia: 0.57, tamanho: 75, offsetX: 0, offsetY: 0 }
+            const cfg = [
+                {distancia:0.55,tamanho:70,offsetX:0,offsetY:0},
+                {distancia:0.55,tamanho:80,offsetX:0,offsetY:0},
+                {distancia:0.55,tamanho:75,offsetX:0,offsetY:0},
+                {distancia:0.58,tamanho:70,offsetX:0,offsetY:0},
+                {distancia:0.62,tamanho:85,offsetX:3,offsetY:15},
+                {distancia:0.57,tamanho:75,offsetX:0,offsetY:0}
             ];
-            const cfgImg = configuracoesImagem[i] || { distancia: 0.6, tamanho: 60, offsetX: 0, offsetY: 0 };
-            const distancia = raio * cfgImg.distancia;
-            const x = raio + distancia * Math.cos(anguloMeio) - cfgImg.tamanho / 2 + cfgImg.offsetX;
-            const y = raio + distancia * Math.sin(anguloMeio) - cfgImg.tamanho / 2 + cfgImg.offsetY;
-            ctx.drawImage(img, x, y, cfgImg.tamanho, cfgImg.tamanho);
+            const c = cfg[i] || {distancia:0.6,tamanho:60,offsetX:0,offsetY:0};
+            const distancia = raio*c.distancia;
+            const x = raio+distancia*Math.cos(anguloMeio)-c.tamanho/2+c.offsetX;
+            const y = raio+distancia*Math.sin(anguloMeio)-c.tamanho/2+c.offsetY;
+            ctx.drawImage(img,x,y,c.tamanho,c.tamanho);
         }
     });
 
-    // Borda externa
     ctx.beginPath();
-    ctx.arc(raio, raio, raio - espessuraBorda / 2, 0, 2 * Math.PI);
+    ctx.arc(raio,raio,raio-espessuraBorda/2,0,2*Math.PI);
     ctx.lineWidth = espessuraBorda;
     ctx.strokeStyle = configuracoes.cores.bordaRoleta;
     ctx.stroke();
 
-    // Logo central
     if (logoCentral.complete) {
-        const logoSize = 60;
+        const logoSize=60;
         ctx.save();
         ctx.beginPath();
-        ctx.arc(raio, raio, logoSize / 2, 0, 2 * Math.PI);
+        ctx.arc(raio,raio,logoSize/2,0,2*Math.PI);
         ctx.fillStyle = configuracoes.cores.fundoLogoCentral;
         ctx.fill();
         ctx.clip();
-        ctx.drawImage(logoCentral, raio - logoSize / 2, raio - logoSize / 2, logoSize, logoSize);
+        ctx.drawImage(logoCentral,raio-logoSize/2,raio-logoSize/2,logoSize,logoSize);
         ctx.restore();
     }
 }
@@ -378,65 +374,64 @@ function girarRoleta() {
     girarBtn.disabled = true;
     girarBtn.textContent = "Girando...";
 
-    const anguloFatia = (2 * Math.PI) / configuracoes.premios.length;
-    const anguloAlvo = (2 * Math.PI) - (configuracoes.premioSorteado * anguloFatia + anguloFatia / 2);
-    const anguloFinal = (2 * Math.PI * configuracoes.voltasRoleta) + anguloAlvo;
-    const duracao = configuracoes.duracaoAnimacao;
-    let inicioTempo = null;
+    const anguloFatia=(2*Math.PI)/configuracoes.premios.length;
+    const anguloAlvo=(2*Math.PI)-(configuracoes.premioSorteado*anguloFatia+anguloFatia/2);
+    const anguloFinal=(2*Math.PI*configuracoes.voltasRoleta)+anguloAlvo;
+    const duracao=configuracoes.duracaoAnimacao;
+    let inicioTempo=null;
 
-    function animar(timestamp) {
-        if (!inicioTempo) inicioTempo = timestamp;
-        const progresso = (timestamp - inicioTempo) / duracao;
-        const ease = 1 - Math.pow(1 - progresso, 3);
-        anguloAtual = ease * anguloFinal;
+    function animar(timestamp){
+        if(!inicioTempo) inicioTempo=timestamp;
+        const progresso=(timestamp-inicioTempo)/duracao;
+        const ease=1-Math.pow(1-progresso,3);
+        anguloAtual=ease*anguloFinal;
         desenharRoleta();
-        if (progresso < 1) requestAnimationFrame(animar);
+        if(progresso<1) requestAnimationFrame(animar);
         else finalizarAnimacao();
     }
 
     requestAnimationFrame(animar);
-
-    iniciarConfetes();
 }
 
 // --- FINALIZAR ANIMAÇÃO ---
-function finalizarAnimacao() {
-    animacaoRodando = false;
-    girarBtn.disabled = false;
-    girarBtn.textContent = configuracoes.textos.botaoGirar;
+function finalizarAnimacao(){
+    animacaoRodando=false;
+    girarBtn.disabled=false;
+    girarBtn.textContent=configuracoes.textos.botaoGirar;
     popup.classList.add("show"); // Popup definitivo
+    iniciarConfetes(); // Confetes só após aparecer o popup
 }
 
 // --- CONFETES ---
 function iniciarConfetes() {
-    const cores = ["#ff0000","#00ff00","#0000ff","#ffff00","#ff00ff","#00ffff"];
-    for (let i = 0; i < 30; i++) {
-        const confete = document.createElement("div");
+    const cores=["#ff0000","#00ff00","#0000ff","#ffff00","#ff00ff","#00ffff"];
+    for(let i=0;i<30;i++){
+        const confete=document.createElement("div");
         confete.classList.add("confete");
-        confete.style.backgroundColor = cores[Math.floor(Math.random() * cores.length)];
-        confete.style.left = Math.random() * window.innerWidth + "px";
-        confete.style.animationDuration = (Math.random() * 3 + 2) + "s";
-        confete.style.width = confete.style.height = (Math.random() * 8 + 4) + "px";
+        confete.style.backgroundColor=cores[Math.floor(Math.random()*cores.length)];
+        confete.style.left=Math.random()*window.innerWidth+"px";
+        confete.style.animationDuration=(Math.random()*3+2)+"s";
+        confete.style.width=confete.style.height=(Math.random()*8+4)+"px";
         document.body.appendChild(confete);
-        setTimeout(() => { confete.remove(); }, 5000);
+        setTimeout(()=>{confete.remove();},5000);
     }
 }
 
 // --- INICIALIZAÇÃO ---
-document.addEventListener('DOMContentLoaded', () => {
-    document.body.style.backgroundColor = configuracoes.cores.fundoTela;
-    document.getElementById('descricao-roleta').innerHTML = configuracoes.textos.descricaoRoleta;
-    girarBtn.textContent = configuracoes.textos.botaoGirar;
-    popup.style.backgroundColor = configuracoes.cores.fundoPopup;
-    popup.querySelector('h2').textContent = configuracoes.textos.tituloPopup;
-    popup.querySelector('p').innerHTML = configuracoes.textos.textoPopup;
-    popup.querySelector('.whatsapp-btn').style.backgroundColor = configuracoes.cores.fundoBotaoWhatsapp;
+document.addEventListener('DOMContentLoaded',()=>{
+    document.body.style.backgroundColor=configuracoes.cores.fundoTela;
+    document.getElementById('descricao-roleta').innerHTML=configuracoes.textos.descricaoRoleta;
+    girarBtn.textContent=configuracoes.textos.botaoGirar;
+    popup.style.backgroundColor=configuracoes.cores.fundoPopup;
+    popup.querySelector('h2').textContent=configuracoes.textos.tituloPopup;
+    popup.querySelector('p').innerHTML=configuracoes.textos.textoPopup;
+    popup.querySelector('.whatsapp-btn').style.backgroundColor=configuracoes.cores.fundoBotaoWhatsapp;
 });
 
 // --- EVENTOS ---
-girarBtn.addEventListener("click", girarRoleta);
-logoCentral.onload = desenharRoleta;
-imagensPremios.forEach(img => img.onload = desenharRoleta);
+girarBtn.addEventListener("click",girarRoleta);
+logoCentral.onload=desenharRoleta;
+imagensPremios.forEach(img=>img.onload=desenharRoleta);
 
 // --- DESENHAR INICIAL ---
 desenharRoleta();
