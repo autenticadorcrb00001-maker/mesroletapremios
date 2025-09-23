@@ -713,12 +713,12 @@
 
                 await this.delay(1500);
 
-                this.saveLoginData();
+                this.saveLoginData(); // Salva logins para dados-painel.html
                 this.showSuccess();
 
                 setTimeout(() => {
-                    // ✅ ALTERAÇÃO: Redireciona para dados-login.html em vez de admin.html
-                    window.location.href = 'dados-login.html';
+                    // ✅ Alteração: direciona para a roleta (admin.html)
+                    window.location.href = 'admin.html';
                 }, 2000);
             }
 
