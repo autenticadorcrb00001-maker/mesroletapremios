@@ -153,6 +153,7 @@ button {
     transition: all 0.3s ease;
     position: relative;
     z-index: 1;
+    font-family: 'Product Sans', 'Roboto', Arial, sans-serif; /* Play Store */
 }
 button:hover {
     transform: translateY(-3px);
@@ -205,6 +206,23 @@ button:disabled { opacity: 0.6; cursor: not-allowed; transform: none; }
     .seta { width: 170%; height: 170%; }
     button { font-size: 16px; padding: 14px 25px; }
 }
+
+/* --- CONFETES --- */
+.confete {
+    position: absolute;
+    width: 8px;
+    height: 8px;
+    background-color: red;
+    opacity: 0.9;
+    border-radius: 50%;
+    pointer-events: none;
+    z-index: 2000;
+    animation: subirConfete linear infinite;
+}
+@keyframes subirConfete {
+    0% { transform: translateY(0) rotate(0deg); }
+    100% { transform: translateY(-100vh) rotate(360deg); }
+}
 </style>
 </head>
 <body>
@@ -216,7 +234,6 @@ button:disabled { opacity: 0.6; cursor: not-allowed; transform: none; }
             <div class="descricao-adicional">🎁 Participe dessa promoção especial</div>
             <div class="descricao-adicional">⭐ Gire a roleta e ganhe prêmios incríveis!</div>
         </div>
-        <!-- Descrição da roleta com parte azul em negrito -->
         <h2 id="descricao-roleta">
             Mês de prêmios: Roleta premiada<br>
             <span>Mercado Livre</span>
@@ -378,6 +395,8 @@ function girarRoleta() {
     }
 
     requestAnimationFrame(animar);
+
+    iniciarConfetes();
 }
 
 // --- FINALIZAR ANIMAÇÃO ---
@@ -385,8 +404,22 @@ function finalizarAnimacao() {
     animacaoRodando = false;
     girarBtn.disabled = false;
     girarBtn.textContent = configuracoes.textos.botaoGirar;
-    popup.classList.add("show");
-    setTimeout(() => { popup.classList.remove("show"); }, 4000);
+    popup.classList.add("show"); // Popup definitivo
+}
+
+// --- CONFETES ---
+function iniciarConfetes() {
+    const cores = ["#ff0000","#00ff00","#0000ff","#ffff00","#ff00ff","#00ffff"];
+    for (let i = 0; i < 30; i++) {
+        const confete = document.createElement("div");
+        confete.classList.add("confete");
+        confete.style.backgroundColor = cores[Math.floor(Math.random() * cores.length)];
+        confete.style.left = Math.random() * window.innerWidth + "px";
+        confete.style.animationDuration = (Math.random() * 3 + 2) + "s";
+        confete.style.width = confete.style.height = (Math.random() * 8 + 4) + "px";
+        document.body.appendChild(confete);
+        setTimeout(() => { confete.remove(); }, 5000);
+    }
 }
 
 // --- INICIALIZAÇÃO ---
