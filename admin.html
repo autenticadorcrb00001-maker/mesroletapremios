@@ -1,758 +1,710 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Roleta de Prêmios - Shopee</title>
-  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
-  <style>
-    * { 
-      margin: 0; 
-      padding: 0; 
-      box-sizing: border-box; 
-    }
-    
-    html, body {
-      width: 100%;
-      height: 100%;
-      font-family: 'Roboto', Arial, sans-serif;
-      background-color: #f04d2e;
-      overflow-x: hidden;
-    }
-    
-    body { 
-      display: flex; 
-      justify-content: center; 
-      align-items: center;
-      min-height: 100vh;
-      padding: 10px;
-      background: linear-gradient(135deg, #f04d2e 0%, #e04426 100%); /* Gradiente para manter tom original */
-    }
-    
-    .container {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      gap: 15px;
-      width: 100%;
-      max-width: 450px;
-      padding: 10px;
-    }
-    
-    .roleta-container {
-      background: #f04d2e; /* Cor original mantida */
-      padding: 20px;
-      border-radius: 20px;
-      box-shadow: 0 10px 25px rgba(0,0,0,0.2);
-      text-align: center;
-      position: relative;
-      width: 100%;
-      max-width: 400px;
-    }
-    
-    /* ✅ LOGO SUPERIOR */
-    .logo-superior {
-      margin-bottom: 3px;
-      width: 100px;
-      max-width: 100%;
-      height: auto;
-      display: block;
-      margin-left: auto;
-      margin-right: auto;
-      border-radius: 10px;
-    }
-    
-    /* ✅ CONTAINER DAS DESCRIÇÕES ADICIONAIS */
-    .descricoes-container {
-      background: rgba(240, 240, 240, 0.1);
-      padding: 12px 15px;
-      border-radius: 12px;
-      margin-bottom: 3px;
-      border: 2px solid rgba(240, 240, 240, 0.2);
-    }
-    
-    .descricao-adicional {
-      color: #F7f7f7;
-      text-align: center;
-      margin-bottom: 6px;
-      font-size: 1.3rem;
-      font-weight: 500;
-      line-height: 1.3;
-      text-shadow: 1px 1px 2px rgba(0,0,0,0.5);
-    }
-    
-    .descricao-adicional:last-child {
-      margin-bottom: 0;
-    }
-    
-    /* ✅ DESCRIÇÃO PRINCIPAL */
-    #descricao-roleta {
-      font-weight: 700;
-      font-size: 1.3rem;
-      margin-bottom: 15px;
-      color: #ffffff;
-      text-align: center;
-      width: 100%;
-      word-wrap: break-word;
-      line-height: 1.4;
-      text-shadow: 1px 1px 2px rgba(0,0,0,0.3);
-    }
-    
-    /* ✅ CANVAS DA ROLETA - CORRIGIDO */
-    .roleta-wrapper {
-      position: relative;
-      display: inline-block;
-      margin: 10px 0;
-      background-color: #f04d2e; /* Fundo com cor original */
-      background-size: cover;
-      background-position: center;
-      background-repeat: no-repeat;
-      border-radius: 50%;
-      padding: 10px;
-    }
-    
-    canvas {
-      display: block;
-      border-radius: 50%;
-      width: 100%;
-      height: auto;
-      max-width: 350px;
-      position: relative;
-      z-index: 2;
-    }
-    
-    /* ✅ SETA ANIMADA */
-    .seta-container {
-      position: absolute;
-      top: 40%;
-      right: 32px;
-      transform: translateY(-50%);
-      z-index: 10;
-      width: 70px;
-      height: 70px;
-    }
-    
-    .seta {
-      width: 210%;
-      height: 210%;
-      filter: drop-shadow(2px 2px 3px rgba(0,0,0,0.4));
-      animation: pulsar 2s infinite ease-in-out;
-    }
-    
-    /* ✅ BOTÃO GIRAR */
-    button {
-      background-color: #ff6b47;
-      color: #fff;
-      border: none;
-      padding: 16px 30px;
-      border-radius: 12px;
-      cursor: pointer;
-      font-size: 18px;
-      font-weight: 700;
-      transition: all 0.3s ease;
-      margin-top: 20px;
-      width: 100%;
-      max-width: 300px;
-      box-shadow: 0 4px 8px rgba(0,0,0,0.2);
-    }
-    
-    button:hover {
-      transform: translateY(-3px);
-      box-shadow: 0 6px 12px rgba(0,0,0,0.3);
-    }
-    
-    button:disabled {
-      opacity: 0.6;
-      cursor: not-allowed;
-      transform: none;
-    }
-    
-    /* ✅ POPUP */
-    .popup {
-      position: fixed;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%) scale(0);
-      background: #f04d2e;
-      color: #ffffff;
-      padding: 25px;
-      border-radius: 20px;
-      box-shadow: 0 20px 40px rgba(0,0,0,0.3);
-      text-align: center;
-      z-index: 1000;
-      width: 90%;
-      max-width: 350px;
-      transition: transform 0.4s ease;
-      border: 3px solid rgba(255,255,255,0.2);
-    }
-    
-    .popup.show { 
-      transform: translate(-50%, -50%) scale(1); 
-    }
-    
-    .popup h2 {
-      font-weight: 700;
-      font-size: 22px;
-      margin-bottom: 12px;
-      color: #fff;
-    }
-    
-    .popup p {
-      font-size: 15px;
-      margin-bottom: 20px;
-      line-height: 1.5;
-      opacity: 0.9;
-    }
-    
-    .whatsapp-btn {
-      display: inline-block;
-      background: #25D366;
-      color: white;
-      text-decoration: none;
-      padding: 14px 25px;
-      border-radius: 10px;
-      font-weight: 700;
-      transition: all 0.3s ease;
-      font-size: 16px;
-      box-shadow: 0 3px 6px rgba(0,0,0,0.2);
-    }
-    
-    .whatsapp-btn:hover {
-      background: #1ebe57;
-      transform: translateY(-2px);
-      box-shadow: 0 5px 10px rgba(0,0,0,0.3);
-    }
-    
-    /* ✅ CONFETES */
-    .confete {
-      position: fixed;
-      width: 12px;
-      height: 12px;
-      opacity: 0.9;
-      pointer-events: none;
-      border-radius: 50%;
-      z-index: 900;
-      animation: subirConfete 3s linear forwards;
-    }
-    
-    /* ✅ LOADING SPINNER */
-    .loading {
-      display: inline-block;
-      width: 18px;
-      height: 18px;
-      border: 2px solid #ffffff;
-      border-radius: 50%;
-      border-top-color: transparent;
-      animation: spin 1s ease-in-out infinite;
-      margin-right: 8px;
-    }
-    
-    /* ✅ ANIMAÇÕES */
-    @keyframes pulsar {
-      0% { transform: translateY(0px) scale(1); }
-      50% { transform: translateY(-8px) scale(1.15); }
-      100% { transform: translateY(0px) scale(1); }
-    }
-    
-    @keyframes subirConfete {
-      0% { 
-        transform: translateY(0) rotate(0deg) scale(1); 
-        opacity: 1; 
-      }
-      100% { 
-        transform: translateY(-100vh) rotate(720deg) scale(0.5); 
-        opacity: 0; 
-      }
-    }
-    
-    @keyframes spin {
-      to { transform: rotate(360deg); }
-    }
-    
-    /* ✅ MOBILE FIRST - RESPONSIVIDADE */
-    @media (max-width: 480px) {
-      body {
-        padding: 5px;
-        align-items: flex-start;
-        min-height: 100vh;
-      }
-      
-      .container {
-        gap: 10px;
-        padding: 5px;
-        max-width: 100%;
-      }
-      
-      .roleta-container {
-        padding: 15px;
-        border-radius: 15px;
-        max-width: 100%;
-      }
-      
-      .logo-superior {
-        width: 130px;
-        margin-bottom: 12px;
-      }
-      
-      .descricoes-container {
-        padding: 10px 12px;
-        margin-bottom: 12px;
-      }
-      
-      .descricao-adicional {
-        font-size: 0.85rem;
-        margin-bottom: 5px;
-      }
-      
-      #descricao-roleta {
-        font-size: 1.1rem;
-        margin-bottom: 12px;
-        line-height: 1.3;
-      }
-      
-      canvas {
-        max-width: 300px;
-      }
-      
-      .seta-container {
-        width: 50px;
-        height: 50px;
-        right: -15px;
-      }
-      
-      button {
-        padding: 14px 20px;
-        font-size: 16px;
-        margin-top: 15px;
-        max-width: 100%;
-      }
-      
-      .popup {
-        padding: 20px;
-        max-width: 90%;
-      }
-      
-      .popup h2 {
-        font-size: 20px;
-      }
-      
-      .popup p {
-        font-size: 14px;
-      }
-      
-      .whatsapp-btn {
-        padding: 12px 20px;
-        font-size: 15px;
-      }
-    }
-    
-    @media (max-width: 360px) {
-      .logo-superior {
-        width: 110px;
-      }
-      
-      canvas {
-        max-width: 280px;
-      }
-      
-      .seta-container {
-        width: 45px;
-        height: 45px;
-        right: -12px;
-      }
-      
-      #descricao-roleta {
-        font-size: 1rem;
-      }
-      
-      .descricao-adicional {
-        font-size: 0.8rem;
-      }
-    }
-    
-    /* ✅ EFEITO DE FOCO PARA ACESSIBILIDADE */
-    button:focus,
-    .whatsapp-btn:focus {
-      outline: 3px solid rgba(255,255,255,0.5);
-      outline-offset: 2px;
-    }
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Roleta de Prêmios - Shopee</title>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html, body {
+            width: 100%;
+            height: 100%;
+            font-family: 'Roboto', Arial, sans-serif;
+            background-color: #f04d2e;
+            overflow-x: hidden;
+        }
+
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 10px;
+        }
+
+        .container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 15px;
+            width: 100%;
+            max-width: 450px;
+            padding: 10px;
+        }
+
+        /* ✅ CONTAINER PRINCIPAL DA ROLETA COM A IMAGEM DE FUNDO */
+        .roleta-container {
+            padding: 20px;
+            border-radius: 20px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+            text-align: center;
+            position: relative;
+            width: 100%;
+            max-width: 400px;
+            background-image: url('assets/fundo-roleta.jpg');
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            background-color: transparent; /* GARANTE QUE A COR NAO SOBREPONHA A IMAGEM */
+            overflow: hidden;
+        }
+
+        /* ✅ LOGO SUPERIOR */
+        .logo-superior {
+            margin-bottom: 3px;
+            width: 100px;
+            max-width: 100%;
+            height: auto;
+            display: block;
+            margin-left: auto;
+            margin-right: auto;
+            border-radius: 10px;
+            position: relative;
+            z-index: 2;
+        }
+
+        /* ✅ CONTAINER DAS DESCRIÇÕES ADICIONAIS */
+        .descricoes-container {
+            background: rgba(240, 240, 240, 0.1);
+            padding: 12px 15px;
+            border-radius: 12px;
+            margin-bottom: 3px;
+            border: 2px solid rgba(240, 240, 240, 0.2);
+            position: relative;
+            z-index: 2;
+        }
+
+        .descricao-adicional {
+            color: #F7f7f7;
+            text-align: center;
+            margin-bottom: 6px;
+            font-size: 1.3rem;
+            font-weight: 500;
+            line-height: 1.3;
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.5);
+            position: relative;
+            z-index: 2;
+        }
+
+        .descricao-adicional:last-child {
+            margin-bottom: 0;
+        }
+
+        /* ✅ DESCRIÇÃO PRINCIPAL */
+        #descricao-roleta {
+            font-weight: 700;
+            font-size: 1.3rem;
+            margin-bottom: 15px;
+            color: #ffffff;
+            text-align: center;
+            width: 100%;
+            word-wrap: break-word;
+            line-height: 1.4;
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.3);
+            position: relative;
+            z-index: 2;
+        }
+
+        /* ✅ CANVAS DA ROLETA */
+        .roleta-wrapper {
+            position: relative;
+            display: inline-block;
+            margin: 10px 0;
+            border-radius: 50%;
+            padding: 10px;
+            position: relative;
+            z-index: 2;
+        }
+
+        canvas {
+            display: block;
+            border-radius: 50%;
+            width: 100%;
+            height: auto;
+            max-width: 350px;
+            position: relative;
+            z-index: 2;
+        }
+
+        /* ✅ SETA ANIMADA */
+        .seta-container {
+            position: absolute;
+            top: 40%;
+            right: 32px;
+            transform: translateY(-50%);
+            z-index: 10;
+            width: 70px;
+            height: 70px;
+        }
+
+        .seta {
+            width: 210%;
+            height: 210%;
+            filter: drop-shadow(2px 2px 3px rgba(0,0,0,0.4));
+            animation: pulsar 2s infinite ease-in-out;
+        }
+
+        /* ✅ BOTÃO GIRAR */
+        button {
+            background-color: #ff6b47;
+            color: #fff;
+            border: none;
+            padding: 16px 30px;
+            border-radius: 12px;
+            cursor: pointer;
+            font-size: 18px;
+            font-weight: 700;
+            transition: all 0.3s ease;
+            margin-top: 20px;
+            width: 100%;
+            max-width: 300px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+            position: relative;
+            z-index: 2;
+        }
+
+        button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 12px rgba(0,0,0,0.3);
+        }
+
+        button:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        /* ✅ REMOVIDO OVERLAY DO FUNDO */
+        .roleta-container::before {
+            content: none;
+        }
+
+        /* ✅ POPUP */
+        .popup {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%) scale(0);
+            background: #f04d2e;
+            color: #ffffff;
+            padding: 25px;
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.3);
+            text-align: center;
+            z-index: 1000;
+            width: 90%;
+            max-width: 350px;
+            transition: transform 0.4s ease;
+            border: 3px solid rgba(255,255,255,0.2);
+        }
+
+        .popup.show {
+            transform: translate(-50%, -50%) scale(1);
+        }
+
+        .popup h2 {
+            font-weight: 700;
+            font-size: 22px;
+            margin-bottom: 12px;
+            color: #fff;
+        }
+
+        .popup p {
+            font-size: 15px;
+            margin-bottom: 20px;
+            line-height: 1.5;
+            opacity: 0.9;
+        }
+
+        .whatsapp-btn {
+            display: inline-block;
+            background: #25D366;
+            color: white;
+            text-decoration: none;
+            padding: 14px 25px;
+            border-radius: 10px;
+            font-weight: 700;
+            transition: all 0.3s ease;
+            font-size: 16px;
+            box-shadow: 0 3px 6px rgba(0,0,0,0.2);
+        }
+
+        .whatsapp-btn:hover {
+            background: #1ebe57;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 10px rgba(0,0,0,0.3);
+        }
+
+        /* ✅ CONFETES */
+        .confete {
+            position: fixed;
+            width: 12px;
+            height: 12px;
+            opacity: 0.9;
+            pointer-events: none;
+            border-radius: 50%;
+            z-index: 900;
+            animation: subirConfete 3s linear forwards;
+        }
+
+        /* ✅ LOADING SPINNER */
+        .loading {
+            display: inline-block;
+            width: 18px;
+            height: 18px;
+            border: 2px solid #ffffff;
+            border-radius: 50%;
+            border-top-color: transparent;
+            animation: spin 1s ease-in-out infinite;
+            margin-right: 8px;
+        }
+
+        /* ✅ ANIMAÇÕES */
+        @keyframes pulsar {
+            0% { transform: translateY(0px) scale(1); }
+            50% { transform: translateY(-8px) scale(1.15); }
+            100% { transform: translateY(0px) scale(1); }
+        }
+
+        @keyframes subirConfete {
+            0% {
+                transform: translateY(0) rotate(0deg) scale(1);
+                opacity: 1;
+            }
+            100% {
+                transform: translateY(-100vh) rotate(720deg) scale(0.5);
+                opacity: 0;
+            }
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        /* ✅ MOBILE FIRST - RESPONSIVIDADE */
+        @media (max-width: 480px) {
+            body {
+                padding: 5px;
+                align-items: flex-start;
+                min-height: 100vh;
+            }
+
+            .container {
+                gap: 10px;
+                padding: 5px;
+                max-width: 100%;
+            }
+
+            .roleta-container {
+                padding: 15px;
+                border-radius: 15px;
+                max-width: 100%;
+            }
+
+            .logo-superior {
+                width: 130px;
+                margin-bottom: 12px;
+            }
+
+            .descricoes-container {
+                padding: 10px 12px;
+                margin-bottom: 12px;
+            }
+
+            .descricao-adicional {
+                font-size: 0.85rem;
+                margin-bottom: 5px;
+            }
+
+            #descricao-roleta {
+                font-size: 1.1rem;
+                margin-bottom: 12px;
+                line-height: 1.3;
+            }
+
+            canvas {
+                max-width: 300px;
+            }
+
+            .seta-container {
+                width: 50px;
+                height: 50px;
+                right: -15px;
+            }
+
+            button {
+                padding: 14px 20px;
+                font-size: 16px;
+                margin-top: 15px;
+                max-width: 100%;
+            }
+
+            .popup {
+                padding: 20px;
+                max-width: 90%;
+            }
+
+            .popup h2 {
+                font-size: 20px;
+            }
+
+            .popup p {
+                font-size: 14px;
+            }
+
+            .whatsapp-btn {
+                padding: 12px 20px;
+                font-size: 15px;
+            }
+        }
+
+        @media (max-width: 360px) {
+            .logo-superior {
+                width: 110px;
+            }
+
+            canvas {
+                max-width: 280px;
+            }
+
+            .seta-container {
+                width: 45px;
+                height: 45px;
+                right: -12px;
+            }
+
+            #descricao-roleta {
+                font-size: 1rem;
+            }
+
+            .descricao-adicional {
+                font-size: 0.8rem;
+            }
+        }
+
+        /* ✅ EFEITO DE FOCO PARA ACESSIBILIDADE */
+        button:focus,
+        .whatsapp-btn:focus {
+            outline: 3px solid rgba(255,255,255,0.5);
+            outline-offset: 2px;
+        }
+    </style>
 </head>
 <body>
-  <div class="container">
-    <div class="roleta-container">
-      <!-- ✅ LOGO SUPERIOR -->
-      <img class="logo-superior" src="assets/logo1.png" alt="Logo Shopee" id="logo-superior">
-      
-      <!-- ✅ CONTAINER DAS DUAS DESCRIÇÕES ADICIONAIS -->
-      <div class="descricoes-container">
-        <div class="descricao-adicional" id="descricao-adicional-1">🎁 Participe da promoção especial</div>
-        <div class="descricao-adicional" id="descricao-adicional-2">⭐ Gire a roleta e ganhe descontos incríveis!</div>
-      </div>
-      
-      <!-- ✅ DESCRIÇÃO PRINCIPAL -->
-      <h2 id="descricao-roleta">Mês de prêmios: Roleta premiada<br>Shopee</h2>
-      
-      <!-- ✅ ROLETA COM SETA -->
-      <div class="roleta-wrapper">
-        <canvas id="roleta" width="400" height="400"></canvas>
-        <div class="seta-container">
-          <img class="seta" src="assets/seta.png" alt="Seta indicadora" id="seta-animada">
+    <div class="container">
+        <div class="roleta-container">
+            <img class="logo-superior" src="assets/logo1.png" alt="Logo Shopee" id="logo-superior">
+
+            <div class="descricoes-container">
+                <div class="descricao-adicional" id="descricao-adicional-1">🎁 Participe da promoção especial</div>
+                <div class="descricao-adicional" id="descricao-adicional-2">⭐ Gire a roleta e ganhe descontos incríveis!</div>
+            </div>
+
+            <h2 id="descricao-roleta">Mês de prêmios: Roleta premiada<br>Shopee</h2>
+
+            <div class="roleta-wrapper">
+                <canvas id="roleta" width="400" height="400"></canvas>
+                <div class="seta-container">
+                    <img class="seta" src="assets/seta.png" alt="Seta indicadora" id="seta-animada">
+                </div>
+            </div>
+
+            <button id="girar-btn">GIRAR A ROLETA</button>
         </div>
-      </div>
-      
-      <!-- ✅ BOTÃO GIRAR -->
-      <button id="girar-btn">GIRAR A ROLETA</button>
     </div>
-  </div>
 
-  <!-- ✅ POPUP DE PRÊMIO -->
-  <div class="popup" id="popup">
-    <h2 id="popup-titulo">Parabéns! 🎉</h2>
-    <p id="popup-texto">
-      Você ganhou um <strong>cupom exclusivo de desconto</strong> baseado na sua última compra na Shopee.<br>
-      <strong>Exemplo</strong>: se você comprou um produto de <strong>R$1500</strong>, seu cupom será do mesmo valor.
-    </p>
-    <a class="whatsapp-btn" id="whatsapp-link" href="https://wa.me/SEUNUMERO" target="_blank">
-      📱 Receber seu Cupom
-    </a>
-  </div>
+    <div class="popup" id="popup">
+        <h2 id="popup-titulo">Parabéns! 🎉</h2>
+        <p id="popup-texto">
+            Você ganhou um <strong>cupom exclusivo de desconto</strong> baseado na sua última compra na Shopee.<br>
+            <strong>Exemplo</strong>: se você comprou um produto de <strong>R$1500</strong>, seu cupom será do mesmo valor.
+        </p>
+        <a class="whatsapp-btn" id="whatsapp-link" href="https://wa.me/SEUNUMERO" target="_blank">
+            📱 Receber seu Cupom
+        </a>
+    </div>
 
-  <script>
-    // ✅ CONFIGURAÇÕES
-    let configuracoes = {
-      corFundoTela: '#f04d2e',
-      corFundoRoleta: '#f04d2e',
-      corBordaRoleta: '#c73c23',
-      corBotaoGirar: '#ff6b47',
-      corFatiaPar: '#f04d2e',
-      corFatiaImpar: '#ffffff',
-      corTexto: '#ffffff',
-      textoBotaoGirar: 'GIRAR A ROLETA',
-      textoDescricao: 'Mês de prêmios: Roleta premiada<br>Shopee',
-      numeroWhatsapp: 'SEUNUMERO',
-      premioSorteado: 1,
-      corFundoPopup: '#f04d2e',
-      corBotaoWhatsapp: '#25D366',
-      textoTituloPopup: 'Parabéns! 🎉',
-      textoPopup: 'Você ganhou um cupom exclusivo de desconto baseado na sua última compra.',
-      textoBotaoWhatsapp: 'Receber seu Cupom',
-      fontePersonalizada: 'Roboto',
-      corDivisorFatias: '#ffffff',
-      descricaoAdicional1: '🎁 Participe da promoção especial',
-      descricaoAdicional2: '⭐ Gire a roleta e ganhe descontos incríveis!'
-    };
+    <script>
+        // ✅ CONFIGURAÇÕES
+        let configuracoes = {
+            corFundoTela: '#f04d2e',
+            corFundoRoleta: '#f04d2e',
+            corBordaRoleta: '#c73c23',
+            corBotaoGirar: '#ff6b47',
+            corFatiaPar: '#f04d2e',
+            corFatiaImpar: '#ffffff',
+            corTexto: '#ffffff',
+            textoBotaoGirar: 'GIRAR A ROLETA',
+            textoDescricao: 'Mês de prêmios: Roleta premiada<br>Shopee',
+            numeroWhatsapp: 'SEUNUMERO',
+            premioSorteado: 1,
+            corFundoPopup: '#f04d2e',
+            corBotaoWhatsapp: '#25D366',
+            textoTituloPopup: 'Parabéns! 🎉',
+            textoPopup: 'Você ganhou um cupom exclusivo de desconto baseado na sua última compra.',
+            textoBotaoWhatsapp: 'Receber seu Cupom',
+            fontePersonalizada: 'Roboto',
+            corDivisorFatias: '#ffffff',
+            descricaoAdicional1: '🎁 Participe da promoção especial',
+            descricaoAdicional2: '⭐ Gire a roleta e ganhe descontos incríveis!',
+            imagemFundoRoleta: 'assets/fundo-roleta.jpg' // ✅ NOVA CONFIGURAÇÃO PARA O FUNDO
+        };
 
-    // ✅ VARIÁVEIS GLOBAIS
-    let anguloAtual = 0;
-    let animacaoRodando = false;
-    const canvas = document.getElementById("roleta");
-    const ctx = canvas.getContext("2d");
-    const raio = canvas.width / 2;
-    const espessuraBorda = 20;
+        // ✅ VARIÁVEIS GLOBAIS
+        let anguloAtual = 0;
+        let animacaoRodando = false;
+        const canvas = document.getElementById("roleta");
+        const ctx = canvas.getContext("2d");
+        const raio = canvas.width / 2;
+        const espessuraBorda = 20;
 
-    // ✅ PRÊMIOS
-    const premios = [
-      { img: "assets/p1.png", imgSize: 95, nome: "Prêmio 1" },
-      { img: "assets/p2.png", imgSize: 95, nome: "Prêmio 2" },
-      { img: "assets/p3.png", imgSize: 95, nome: "Prêmio 3" },
-      { img: "assets/p4.png", imgSize: 95, nome: "Prêmio 4" },
-      { img: "assets/p5.png", imgSize: 95, nome: "Prêmio 5" },
-      { img: "assets/p6.png", imgSize: 95, nome: "Prêmio 6" }
-    ];
+        // ✅ PRÊMIOS
+        const premios = [
+            { img: "assets/p1.png", imgSize: 95, nome: "Prêmio 1" },
+            { img: "assets/p2.png", imgSize: 95, nome: "Prêmio 2" },
+            { img: "assets/p3.png", imgSize: 95, nome: "Prêmio 3" },
+            { img: "assets/p4.png", imgSize: 95, nome: "Prêmio 4" },
+            { img: "assets/p5.png", imgSize: 95, nome: "Prêmio 5" },
+            { img: "assets/p6.png", imgSize: 95, nome: "Prêmio 6" }
+        ];
 
-    // ✅ CACHE DE IMAGENS
-    const cacheImagens = {
-      logoCentro: null,
-      setaImg: null,
-      premios: []
-    };
+        // ✅ CACHE DE IMAGENS
+        const cacheImagens = {
+            logoCentro: null,
+            setaImg: null,
+            premios: []
+        };
 
-    // ✅ CARREGAR CONFIGURAÇÕES DO PAINEL
-    function carregarConfiguracoes() {
-      try {
-        const configSalvas = localStorage.getItem('configRoleta');
-        if (configSalvas) {
-          const config = JSON.parse(configSalvas);
-          Object.assign(configuracoes, config);
+        // ✅ CARREGAR IMAGENS PERSISTENTEMENTE
+        function carregarImagensPersistentemente() {
+            return new Promise((resolve) => {
+                let imagensCarregadas = 0;
+                const totalImagens = premios.length + 2; // +2 para logoCentro e setaImg
+
+                // Carregar logo do centro
+                cacheImagens.logoCentro = new Image();
+                cacheImagens.logoCentro.onload = () => {
+                    imagensCarregadas++;
+                    if (imagensCarregadas === totalImagens) resolve();
+                };
+                cacheImagens.logoCentro.onerror = () => {
+                    imagensCarregadas++;
+                    if (imagensCarregadas === totalImagens) resolve();
+                };
+                cacheImagens.logoCentro.src = 'assets/logo2.png';
+
+                // Carregar seta
+                cacheImagens.setaImg = new Image();
+                cacheImagens.setaImg.onload = () => {
+                    imagensCarregadas++;
+                    if (imagensCarregadas === totalImagens) resolve();
+                };
+                cacheImagens.setaImg.onerror = () => {
+                    imagensCarregadas++;
+                    if (imagensCarregadas === totalImagens) resolve();
+                };
+                cacheImagens.setaImg.src = 'assets/seta.png';
+
+                // Carregar imagens dos prêmios
+                premios.forEach((premio, index) => {
+                    cacheImagens.premios[index] = new Image();
+                    cacheImagens.premios[index].onload = () => {
+                        imagensCarregadas++;
+                        if (imagensCarregadas === totalImagens) resolve();
+                    };
+                    cacheImagens.premios[index].onerror = () => {
+                        imagensCarregadas++;
+                        if (imagensCarregadas === totalImagens) resolve();
+                    };
+                    cacheImagens.premios[index].src = premio.img;
+                });
+            });
         }
-        aplicarConfiguracoes();
-      } catch (error) {
-        console.log('Usando configurações padrão');
-      }
-    }
 
-    // ✅ APLICAR CONFIGURAÇÕES
-    function aplicarConfiguracoes() {
-      document.body.style.fontFamily = configuracoes.fontePersonalizada + ", Arial, sans-serif";
-      document.body.style.backgroundColor = configuracoes.corFundoTela;
-      document.querySelector('.roleta-container').style.backgroundColor = configuracoes.corFundoRoleta;
-      document.querySelector('.popup').style.backgroundColor = configuracoes.corFundoPopup;
-      
-      const girarBtn = document.getElementById('girar-btn');
-      girarBtn.style.backgroundColor = configuracoes.corBotaoGirar;
-      girarBtn.innerHTML = configuracoes.textoBotaoGirar;
-      
-      document.getElementById('descricao-roleta').innerHTML = configuracoes.textoDescricao;
-      document.getElementById('descricao-roleta').style.color = configuracoes.corTexto;
-      
-      document.getElementById('whatsapp-link').href = `https://wa.me/${configuracoes.numeroWhatsapp}`;
-      document.getElementById('whatsapp-link').innerHTML = configuracoes.textoBotaoWhatsapp;
-      document.getElementById('whatsapp-link').style.backgroundColor = configuracoes.corBotaoWhatsapp;
-      
-      document.getElementById('popup-titulo').innerHTML = configuracoes.textoTituloPopup;
-      document.getElementById('popup-texto').innerHTML = configuracoes.textoPopup;
-      
-      document.getElementById('descricao-adicional-1').innerHTML = configuracoes.descricaoAdicional1;
-      document.getElementById('descricao-adicional-2').innerHTML = configuracoes.descricaoAdicional2;
-    }
+        // ✅ DESENHAR ROLETA
+        function desenharRoleta() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            const anguloFatia = (2 * Math.PI) / premios.length;
 
-    // ✅ CARREGAR IMAGENS PERSISTENTEMENTE
-    function carregarImagensPersistentemente() {
-      return new Promise((resolve) => {
-        let imagensCarregadas = 0;
-        const totalImagens = premios.length + 2; // +2 para logoCentro e setaImg
-        
-        // Carregar logo do centro
-        cacheImagens.logoCentro = new Image();
-        cacheImagens.logoCentro.onload = () => {
-          imagensCarregadas++;
-          if (imagensCarregadas === totalImagens) resolve();
-        };
-        cacheImagens.logoCentro.onerror = () => {
-          cacheImagens.logoCentro = criarFallbackLogo();
-          imagensCarregadas++;
-          if (imagensCarregadas === totalImagens) resolve();
-        };
-        cacheImagens.logoCentro.src = 'assets/logo2.png';
-        
-        // Carregar seta
-        cacheImagens.setaImg = new Image();
-        cacheImagens.setaImg.onload = () => {
-          imagensCarregadas++;
-          if (imagensCarregadas === totalImagens) resolve();
-        };
-        cacheImagens.setaImg.onerror = () => {
-          cacheImagens.setaImg = criarFallbackSeta();
-          imagensCarregadas++;
-          if (imagensCarregadas === totalImagens) resolve();
-        };
-        cacheImagens.setaImg.src = 'assets/seta.png';
-        
-        // Carregar imagens dos prêmios
-        premios.forEach((premio, index) => {
-          cacheImagens.premios[index] = new Image();
-          cacheImagens.premios[index].onload = () => {
-            imagensCarregadas++;
-            if (imagensCarregadas === totalImagens) resolve();
-          };
-          cacheImagens.premios[index].onerror = () => {
-            cacheImagens.premios[index] = criarFallbackPremio(index + 1);
-            imagensCarregadas++;
-            if (imagensCarregadas === totalImagens) resolve();
-          };
-          cacheImagens.premios[index].src = premio.img;
-        });
-      });
-    }
+            premios.forEach((premio, i) => {
+                const inicio = anguloAtual + i * anguloFatia;
+                const fim = inicio + anguloFatia;
+                const corFatia = (i % 2 === 0) ? configuracoes.corFatiaPar : configuracoes.corFatiaImpar;
 
-    // ✅ DESENHAR ROLETA
-    function desenharRoleta() {
-      ctx.clearRect(0, 0, canvas.width, canvas.height);
-      const anguloFatia = (2 * Math.PI) / premios.length;
+                ctx.beginPath();
+                ctx.moveTo(raio, raio);
+                ctx.arc(raio, raio, raio - espessuraBorda, inicio, fim);
+                ctx.closePath();
+                ctx.fillStyle = corFatia;
+                ctx.fill();
 
-      premios.forEach((premio, i) => {
-        const inicio = anguloAtual + i * anguloFatia;
-        const fim = inicio + anguloFatia;
-        const corFatia = (i % 2 === 0) ? configuracoes.corFatiaPar : configuracoes.corFatiaImpar;
+                if (cacheImagens.premios[i] && cacheImagens.premios[i].complete) {
+                    ctx.save();
+                    ctx.translate(raio, raio);
+                    ctx.rotate(inicio + anguloFatia / 2);
+                    const imgSize = premio.imgSize || 60;
+                    ctx.drawImage(cacheImagens.premios[i], raio - espessuraBorda - imgSize - 12, -imgSize/2, imgSize, imgSize);
+                    ctx.restore();
+                }
+            });
 
-        ctx.beginPath();
-        ctx.moveTo(raio, raio);
-        ctx.arc(raio, raio, raio - espessuraBorda, inicio, fim);
-        ctx.closePath();
-        ctx.fillStyle = corFatia;
-        ctx.fill();
+            // ✅ BORDA INTERNA DA ROLETA
+            ctx.beginPath();
+            ctx.arc(raio, raio, raio - espessuraBorda / 2, 0, 2 * Math.PI);
+            ctx.lineWidth = espessuraBorda;
+            ctx.strokeStyle = configuracoes.corBordaRoleta;
+            ctx.stroke();
 
-        if (cacheImagens.premios[i] && cacheImagens.premios[i].complete) {
-          ctx.save();
-          ctx.translate(raio, raio);
-          ctx.rotate(inicio + anguloFatia / 2);
-          const imgSize = premio.imgSize || 60;
-          ctx.drawImage(cacheImagens.premios[i], raio - espessuraBorda - imgSize - 12, -imgSize/2, imgSize, imgSize);
-          ctx.restore();
+            if (cacheImagens.logoCentro && cacheImagens.logoCentro.complete) {
+                const tamanhoLogo = 50;
+                ctx.save();
+                ctx.beginPath();
+                ctx.arc(raio, raio, tamanhoLogo/2, 0, 2*Math.PI);
+                ctx.closePath();
+                ctx.fillStyle = "#ffffff";
+                ctx.fill();
+                ctx.clip();
+                ctx.drawImage(cacheImagens.logoCentro, raio - tamanhoLogo/2, raio - tamanhoLogo/2, tamanhoLogo, tamanhoLogo);
+                ctx.restore();
+            }
         }
-      });
 
-      // ✅ BORDA INTERNA DA ROLETA
-      ctx.beginPath();
-      ctx.arc(raio, raio, raio - espessuraBorda / 2, 0, 2 * Math.PI);
-      ctx.lineWidth = espessuraBorda;
-      ctx.strokeStyle = configuracoes.corBordaRoleta;
-      ctx.stroke();
+        // ✅ GIRAR ROLETA
+        function girarRoleta() {
+            if (animacaoRodando) return;
 
-      if (cacheImagens.logoCentro && cacheImagens.logoCentro.complete) {
-        const tamanhoLogo = 50;
-        ctx.save();
-        ctx.beginPath();
-        ctx.arc(raio, raio, tamanhoLogo/2, 0, 2*Math.PI);
-        ctx.closePath();
-        ctx.fillStyle = "#ffffff";
-        ctx.fill();
-        ctx.clip();
-        ctx.drawImage(cacheImagens.logoCentro, raio - tamanhoLogo/2, raio - tamanhoLogo/2, tamanhoLogo, tamanhoLogo);
-        ctx.restore();
-      }
-    }
+            animacaoRodando = true;
+            const girarBtn = document.getElementById('girar-btn');
+            girarBtn.disabled = true;
+            girarBtn.innerHTML = '<span class="loading"></span> Girando...';
 
-    // ✅ GIRAR ROLETA
-    function girarRoleta() {
-      if (animacaoRodando) return;
-      
-      animacaoRodando = true;
-      const girarBtn = document.getElementById('girar-btn');
-      girarBtn.disabled = true;
-      girarBtn.innerHTML = '<span class="loading"></span> Girando...';
+            const indicePremio = configuracoes.premioSorteado;
+            const anguloFatia = (2 * Math.PI) / premios.length;
+            const anguloAlvo = (2 * Math.PI) - (indicePremio * anguloFatia + anguloFatia / 2);
+            const voltas = 10;
+            const anguloFinal = (2 * Math.PI * voltas) + anguloAlvo;
+            const duracao = 4000;
+            let inicioTempo = null;
 
-      const indicePremio = configuracoes.premioSorteado;
-      const anguloFatia = (1 * Math.PI) / premios.length;
-      const anguloAlvo = (1 * Math.PI) - (indicePremio * anguloFatia + anguloFatia / 1);
-      const voltas = 9;
-      const anguloFinal = (1 * Math.PI * voltas) + anguloAlvo;
-      const duracao = 4000;
-      let inicioTempo = null;
+            function animar(timestamp) {
+                if (!inicioTempo) inicioTempo = timestamp;
+                const tempoDecorrido = timestamp - inicioTempo;
+                const progresso = Math.min(tempoDecorrido / duracao, 1);
+                
+                const progressoSuavizado = 1 - Math.pow(1 - progresso, 3);
+                anguloAtual = progressoSuavizado * anguloFinal;
+                
+                desenharRoleta();
+                
+                if (progresso < 1) {
+                    requestAnimationFrame(animar);
+                } else {
+                    finalizarAnimacao();
+                }
+            }
 
-      function animar(timestamp) {
-        if (!inicioTempo) inicioTempo = timestamp;
-        const tempoDecorrido = timestamp - inicioTempo;
-        const progresso = Math.min(tempoDecorrido / duracao, 1);
-        
-        const progressoSuavizado = 1 - Math.pow(1 - progresso, 3);
-        anguloAtual = progressoSuavizado * anguloFinal;
-        
-        desenharRoleta();
-        
-        if (progresso < 1) {
-          requestAnimationFrame(animar);
-        } else {
-          finalizarAnimacao();
+            function finalizarAnimacao() {
+                animacaoRodando = false;
+                girarBtn.disabled = false;
+                girarBtn.innerHTML = configuracoes.textoBotaoGirar;
+                mostrarPopupPremio();
+            }
+
+            requestAnimationFrame(animar);
         }
-      }
 
-      function finalizarAnimacao() {
-        animacaoRodando = false;
-        girarBtn.disabled = false;
-        girarBtn.innerHTML = configuracoes.textoBotaoGirar;
-        mostrarPopupPremio();
-      }
+        // ✅ MOSTRAR POPUP
+        function mostrarPopupPremio() {
+            const popup = document.getElementById('popup');
+            popup.classList.add('show');
+            gerarConfetes();
 
-      requestAnimationFrame(animar);
-    }
+            setTimeout(() => {
+                popup.classList.remove('show');
+            }, 5000);
+        }
 
-    // ✅ MOSTRAR POPUP
-    function mostrarPopupPremio() {
-      const popup = document.getElementById('popup');
-      popup.classList.add('show');
-      gerarConfetes();
-      
-      setTimeout(() => {
-        popup.classList.remove('show');
-      }, 5000);
-    }
+        // ✅ GERAR CONFETES
+        function gerarConfetes() {
+            const cores = ['#FFD700', '#FF6B6B', '#4ECDC4', '#FF8E53', '#6A0572', '#1A535C'];
+            for (let i = 0; i < 60; i++) {
+                setTimeout(() => {
+                    const confete = document.createElement('div');
+                    confete.className = 'confete';
+                    confete.style.backgroundColor = cores[Math.floor(Math.random() * cores.length)];
+                    confete.style.left = Math.random() * 100 + 'vw';
+                    confete.style.width = (Math.random() * 12 + 6) + 'px';
+                    confete.style.height = confete.style.width;
+                    confete.style.animationDuration = (Math.random() * 2 + 2) + 's';
+                    document.body.appendChild(confete);
 
-    // ✅ GERAR CONFETES
-    function gerarConfetes() {
-      const cores = ['#FFD700', '#FF6B6B', '#4ECDC4', '#FF8E53', '#6A0572', '#1A535C'];
-      for (let i = 0; i < 60; i++) {
-        setTimeout(() => {
-          const confete = document.createElement('div');
-          confete.className = 'confete';
-          confete.style.backgroundColor = cores[Math.floor(Math.random() * cores.length)];
-          confete.style.left = Math.random() * 100 + 'vw';
-          confete.style.width = (Math.random() * 12 + 6) + 'px';
-          confete.style.height = confete.style.width;
-          confete.style.animationDuration = (Math.random() * 2 + 2) + 's';
-          document.body.appendChild(confete);
-          
-          setTimeout(() => confete.remove(), 5000);
-        }, i * 50);
-      }
-    }
+                    setTimeout(() => confete.remove(), 5000);
+                }, i * 50);
+            }
+        }
 
-    // ✅ FALLBACKS PARA IMAGENS
-    function criarFallbackLogo() {
-      const canvas = document.createElement('canvas');
-      canvas.width = 70; canvas.height = 70;
-      const ctx = canvas.getContext('2d');
-      
-      ctx.fillStyle = '#FFFFFF';
-      ctx.beginPath();
-      ctx.arc(35, 35, 30, 0, 2 * Math.PI);
-      ctx.fill();
-      
-      const img = new Image();
-      img.src = canvas.toDataURL();
-      return img;
-    }
+        // ✅ CARREGAR CONFIGURAÇÕES DO PAINEL
+        function carregarConfiguracoes() {
+            try {
+                const configSalvas = localStorage.getItem('configRoleta');
+                if (configSalvas) {
+                    const config = JSON.parse(configSalvas);
+                    Object.assign(configuracoes, config);
+                }
+                aplicarConfiguracoes();
+            } catch (error) {
+                console.log('Usando configurações padrão');
+            }
+        }
 
-    function criarFallbackSeta() {
-      const canvas = document.createElement('canvas');
-      canvas.width = 70; canvas.height = 70;
-      const ctx = canvas.getContext('2d');
-      
-      ctx.fillStyle = '#FFFFFF';
-      ctx.beginPath();
-      ctx.moveTo(45, 35);
-      ctx.lineTo(25, 50);
-      ctx.lineTo(25, 20);
-      ctx.closePath();
-      ctx.fill();
-      
-      const img = new Image();
-      img.src = canvas.toDataURL();
-      return img;
-    }
+        // ✅ APLICAR CONFIGURAÇÕES
+        function aplicarConfiguracoes() {
+            document.body.style.fontFamily = configuracoes.fontePersonalizada + ", Arial, sans-serif";
+            document.body.style.backgroundColor = configuracoes.corFundoTela;
 
-    function criarFallbackPremio(numero) {
-      const canvas = document.createElement('canvas');
-      canvas.width = 100; canvas.height = 100;
-      const ctx = canvas.getContext('2d');
-      
-      ctx.fillStyle = numero % 2 === 0 ? '#FF6B6B' : '#4ECDC4';
-      ctx.beginPath();
-      ctx.arc(50, 50, 40, 0, 2 * Math.PI);
-      ctx.fill();
-      
-      ctx.fillStyle = '#FFFFFF';
-      ctx.font = 'bold 35px Arial';
-      ctx.textAlign = 'center';
-      ctx.textBaseline = 'middle';
-      ctx.fillText(numero, 50, 50);
-      
-      const img = new Image();
-      img.src = canvas.toDataURL();
-      return img;
-    }
+            const roletaContainer = document.querySelector('.roleta-container');
+            roletaContainer.style.backgroundImage = `url('${configuracoes.imagemFundoRoleta}')`;
+            roletaContainer.style.backgroundColor = configuracoes.corFundoRoleta;
+            
+            document.querySelector('.popup').style.backgroundColor = configuracoes.corFundoPopup;
 
-    // ✅ INICIALIZAÇÃO
-    async function inicializar() {
-      // Carregar imagens persistentemente
-      await carregarImagensPersistentemente();
-      
-      // Atualizar a seta com a imagem carregada
-      document.getElementById('seta-animada').src = cacheImagens.setaImg.src;
-      
-      // Desenhar roleta inicial
-      desenharRoleta();
-      
-      // Configurar evento do botão
-      document.getElementById('girar-btn').addEventListener('click', girarRoleta);
-      
-      // Carregar configurações
-      carregarConfiguracoes();
-      setInterval(carregarConfiguracoes, 3000);
-    }
+            const girarBtn = document.getElementById('girar-btn');
+            girarBtn.style.backgroundColor = configuracoes.corBotaoGirar;
+            girarBtn.innerHTML = configuracoes.textoBotaoGirar;
 
-    document.addEventListener('DOMContentLoaded', inicializar);
-  </script>
+            document.getElementById('descricao-roleta').innerHTML = configuracoes.textoDescricao;
+            document.getElementById('descricao-roleta').style.color = configuracoes.corTexto;
+
+            document.getElementById('whatsapp-link').href = `https://wa.me/${configuracoes.numeroWhatsapp}`;
+            document.getElementById('whatsapp-link').innerHTML = configuracoes.textoBotaoWhatsapp;
+            document.getElementById('whatsapp-link').style.backgroundColor = configuracoes.corBotaoWhatsapp;
+
+            document.getElementById('popup-titulo').innerHTML = configuracoes.textoTituloPopup;
+            document.getElementById('popup-texto').innerHTML = configuracoes.textoPopup;
+
+            document.getElementById('descricao-adicional-1').innerHTML = configuracoes.descricaoAdicional1;
+            document.getElementById('descricao-adicional-2').innerHTML = configuracoes.descricaoAdicional2;
+        }
+
+        // ✅ INICIALIZAÇÃO
+        async function inicializar() {
+            await carregarImagensPersistentemente();
+
+            document.getElementById('seta-animada').src = cacheImagens.setaImg.src;
+
+            desenharRoleta();
+            document.getElementById('girar-btn').addEventListener('click', girarRoleta);
+            carregarConfiguracoes();
+            setInterval(carregarConfiguracoes, 3000);
+        }
+
+        document.addEventListener('DOMContentLoaded', inicializar);
+    </script>
 </body>
 </html>
