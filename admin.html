@@ -26,6 +26,18 @@
             padding: 10px;
         }
 
+        /* --- FUNDO ROLETA --- */
+        .fundo-roleta {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: url('assets/fundo-roleta.jpg') no-repeat center center;
+            background-size: cover;
+            z-index: -1;
+        }
+
         .container {
             display: flex;
             flex-direction: column;
@@ -236,6 +248,9 @@
     </style>
 </head>
 <body>
+    <!-- FUNDO ROLETA ADICIONADO -->
+    <div class="fundo-roleta"></div>
+
     <div class="container">
         <div class="roleta-container">
             <img class="logo-superior" src="assets/logo1.png" alt="Logo Shopee">
@@ -274,7 +289,7 @@
                 textoPopup: '#ffffff',
                 fundoBotaoWhatsapp: '#25D366',
                 textoBotaoWhatsapp: '#fff',
-                fundoLogoCentral: '#ffffff' // Cor do círculo atrás da logo central
+                fundoLogoCentral: '#ffffff'
             },
             textos: {
                 botaoGirar: 'GIRAR A ROLETA',
@@ -292,12 +307,11 @@
                 { img: "assets/p5.png" },
                 { img: "assets/p6.png" }
             ],
-            premioSorteado: 1, // 0-index. Ex: 1 é o segundo prêmio.
-            duracaoAnimacao: 4000, // em milissegundos
+            premioSorteado: 1,
+            duracaoAnimacao: 4000,
             voltasRoleta: 10
         };
 
-        // --- REFERÊNCIAS DOM E VARIÁVEIS DE ESTADO ---
         const canvas = document.getElementById("roleta");
         const ctx = canvas.getContext("2d");
         const girarBtn = document.getElementById("girar-btn");
@@ -310,13 +324,11 @@
 
         const logoCentral = new Image();
         logoCentral.src = "assets/logo2.png";
-        
-        // --- FUNÇÕES DE DESENHO E LÓGICA ---
+
         function desenharRoleta() {
             ctx.clearRect(0, 0, canvas.width, canvas.height);
             const anguloFatia = (2 * Math.PI) / configuracoes.premios.length;
 
-            // Desenha as fatias da roleta
             configuracoes.premios.forEach((premio, i) => {
                 const inicio = anguloAtual + i * anguloFatia;
                 const fim = inicio + anguloFatia;
@@ -328,14 +340,12 @@
                 ctx.fill();
             });
 
-            // Desenha a borda da roleta
             ctx.beginPath();
             ctx.arc(raio, raio, raio - espessuraBorda / 2, 0, 2 * Math.PI);
             ctx.lineWidth = espessuraBorda;
             ctx.strokeStyle = configuracoes.cores.bordaRoleta;
             ctx.stroke();
 
-            // Desenha o círculo branco e a logo central
             if (logoCentral.complete) {
                 const logoSize = 60;
                 ctx.save();
@@ -384,15 +394,11 @@
             popup.classList.add("show");
             setTimeout(() => {
                 popup.classList.remove("show");
-            }, 4000); // Oculta o popup após 4 segundos
+            }, 4000);
         }
 
-        // --- INICIALIZAÇÃO ---
         document.addEventListener('DOMContentLoaded', () => {
-            // Aplica as configurações iniciais
             document.body.style.backgroundColor = configuracoes.cores.fundoTela;
-            document.getElementById('descricao-adicional-1').textContent = configuracoes.textos.descricaoAdicional1.replace(/<\/?(br|strong|em)[^>]*>/g, '');
-            document.getElementById('descricao-adicional-2').textContent = configuracoes.textos.descricaoAdicional2.replace(/<\/?(br|strong|em)[^>]*>/g, '');
             document.getElementById('descricao-roleta').innerHTML = configuracoes.textos.descricaoRoleta;
             girarBtn.textContent = configuracoes.textos.botaoGirar;
             popup.style.backgroundColor = configuracoes.cores.fundoPopup;
