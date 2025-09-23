@@ -47,11 +47,12 @@
             position: relative;
             width: 100%;
             max-width: 400px;
+            /* ✅ MANTER APENAS A IMAGEM DE FUNDO AQUI */
             background-image: url('assets/fundo-roleta.jpg');
             background-size: cover;
             background-position: center;
             background-repeat: no-repeat;
-            background-color: transparent; /* GARANTE QUE A COR NAO SOBREPONHA A IMAGEM */
+            background-color: transparent;
             overflow: hidden;
         }
 
@@ -132,20 +133,20 @@
             z-index: 2;
         }
 
-        /* ✅ SETA ANIMADA */
+        /* ✅ SETA ANIMADA - AJUSTADO PARA MOBILE */
         .seta-container {
             position: absolute;
-            top: 40%;
-            right: 45px;
-            transform: translateY(-50%);
+            top: 50%;
+            right: 0;
+            transform: translate(50%, -50%); /* Ajustado para centralizar e mover para fora */
             z-index: 10;
-            width: 65px;
-            height: 65px;
+            width: 70px;
+            height: 70px;
         }
 
         .seta {
-            width: 210%;
-            height: 210%;
+            width: 100%;
+            height: 100%;
             filter: drop-shadow(2px 2px 3px rgba(0,0,0,0.4));
             animation: pulsar 2s infinite ease-in-out;
         }
@@ -332,10 +333,12 @@
                 max-width: 300px;
             }
 
+            /* ✅ AJUSTADO PARA MOBILE */
             .seta-container {
                 width: 50px;
                 height: 50px;
-                right: -15px;
+                right: -25px; /* Ajuste o valor se necessário */
+                transform: translateY(-50%);
             }
 
             button {
@@ -376,7 +379,7 @@
             .seta-container {
                 width: 45px;
                 height: 45px;
-                right: -12px;
+                right: -20px; /* Ajuste o valor se necessário */
             }
 
             #descricao-roleta {
