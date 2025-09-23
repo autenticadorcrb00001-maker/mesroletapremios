@@ -26,6 +26,7 @@
       align-items: center;
       min-height: 100vh;
       padding: 10px;
+      background: linear-gradient(135deg, #f04d2e 0%, #e04426 100%); /* Gradiente para manter tom original */
     }
     
     .container {
@@ -39,7 +40,7 @@
     }
     
     .roleta-container {
-      background: #f04d2e;
+      background: #f04d2e; /* Cor original mantida */
       padding: 20px;
       border-radius: 20px;
       box-shadow: 0 10px 25px rgba(0,0,0,0.2);
@@ -47,12 +48,6 @@
       position: relative;
       width: 100%;
       max-width: 400px;
-      /* ✅ FUNDO AGORA COBRE TODA A ÁREA DO CONTAINER */
-      background-image: url('assets/fundo-roleta.jpg');
-      background-size: cover;
-      background-position: center;
-      background-repeat: no-repeat;
-      overflow: hidden; /* Para garantir que nada ultrapasse os limites */
     }
     
     /* ✅ LOGO SUPERIOR */
@@ -65,8 +60,6 @@
       margin-left: auto;
       margin-right: auto;
       border-radius: 10px;
-      position: relative; /* Para ficar acima do fundo */
-      z-index: 2;
     }
     
     /* ✅ CONTAINER DAS DESCRIÇÕES ADICIONAIS */
@@ -76,8 +69,6 @@
       border-radius: 12px;
       margin-bottom: 3px;
       border: 2px solid rgba(240, 240, 240, 0.2);
-      position: relative; /* Para ficar acima do fundo */
-      z-index: 2;
     }
     
     .descricao-adicional {
@@ -88,8 +79,6 @@
       font-weight: 500;
       line-height: 1.3;
       text-shadow: 1px 1px 2px rgba(0,0,0,0.5);
-      position: relative; /* Para ficar acima do fundo */
-      z-index: 2;
     }
     
     .descricao-adicional:last-child {
@@ -107,20 +96,19 @@
       word-wrap: break-word;
       line-height: 1.4;
       text-shadow: 1px 1px 2px rgba(0,0,0,0.3);
-      position: relative; /* Para ficar acima do fundo */
-      z-index: 2;
     }
     
-    /* ✅ CANVAS DA ROLETA */
+    /* ✅ CANVAS DA ROLETA - CORRIGIDO */
     .roleta-wrapper {
       position: relative;
       display: inline-block;
       margin: 10px 0;
-      /* ❌ REMOVIDO O FUNDO DAQUI - agora está no container principal */
+      background-color: #f04d2e; /* Fundo com cor original */
+      background-size: cover;
+      background-position: center;
+      background-repeat: no-repeat;
       border-radius: 50%;
       padding: 10px;
-      position: relative; /* Para ficar acima do fundo */
-      z-index: 2;
     }
     
     canvas {
@@ -166,8 +154,6 @@
       width: 100%;
       max-width: 300px;
       box-shadow: 0 4px 8px rgba(0,0,0,0.2);
-      position: relative; /* Para ficar acima do fundo */
-      z-index: 2;
     }
     
     button:hover {
@@ -179,19 +165,6 @@
       opacity: 0.6;
       cursor: not-allowed;
       transform: none;
-    }
-    
-    /* ✅ OVERLAY PARA MELHORAR LEGIBILIDADE DO TEXTO */
-    .roleta-container::before {
-      content: '';
-      position: absolute;
-      top: 0;
-      left: 0;
-      right: 0;
-      bottom: 0;
-      background: rgba(240, 77, 46, 0.4); /* Overlay sutil para melhor contraste */
-      z-index: 1;
-      border-radius: 20px;
     }
     
     /* ✅ POPUP */
@@ -467,8 +440,7 @@
       fontePersonalizada: 'Roboto',
       corDivisorFatias: '#ffffff',
       descricaoAdicional1: '🎁 Participe da promoção especial',
-      descricaoAdicional2: '⭐ Gire a roleta e ganhe descontos incríveis!',
-      imagemFundoRoleta: 'assets/fundo-roleta.jpg' // ✅ NOVA CONFIGURAÇÃO PARA O FUNDO
+      descricaoAdicional2: '⭐ Gire a roleta e ganhe descontos incríveis!'
     };
 
     // ✅ VARIÁVEIS GLOBAIS
@@ -489,9 +461,12 @@
       { img: "assets/p6.png", imgSize: 95, nome: "Prêmio 6" }
     ];
 
-    // ✅ IMAGENS
-    const logoCentro = new Image();
-    const setaImg = new Image();
+    // ✅ CACHE DE IMAGENS
+    const cacheImagens = {
+      logoCentro: null,
+      setaImg: null,
+      premios: []
+    };
 
     // ✅ CARREGAR CONFIGURAÇÕES DO PAINEL
     function carregarConfiguracoes() {
@@ -511,12 +486,7 @@
     function aplicarConfiguracoes() {
       document.body.style.fontFamily = configuracoes.fontePersonalizada + ", Arial, sans-serif";
       document.body.style.backgroundColor = configuracoes.corFundoTela;
-      
-      // ✅ APLICAR FUNDO NO CONTAINER DA ROLETA
-      const roletaContainer = document.querySelector('.roleta-container');
-      roletaContainer.style.backgroundImage = `url('${configuracoes.imagemFundoRoleta}')`;
-      roletaContainer.style.backgroundColor = configuracoes.corFundoRoleta;
-      
+      document.querySelector('.roleta-container').style.backgroundColor = configuracoes.corFundoRoleta;
       document.querySelector('.popup').style.backgroundColor = configuracoes.corFundoPopup;
       
       const girarBtn = document.getElementById('girar-btn');
@@ -537,6 +507,55 @@
       document.getElementById('descricao-adicional-2').innerHTML = configuracoes.descricaoAdicional2;
     }
 
+    // ✅ CARREGAR IMAGENS PERSISTENTEMENTE
+    function carregarImagensPersistentemente() {
+      return new Promise((resolve) => {
+        let imagensCarregadas = 0;
+        const totalImagens = premios.length + 2; // +2 para logoCentro e setaImg
+        
+        // Carregar logo do centro
+        cacheImagens.logoCentro = new Image();
+        cacheImagens.logoCentro.onload = () => {
+          imagensCarregadas++;
+          if (imagensCarregadas === totalImagens) resolve();
+        };
+        cacheImagens.logoCentro.onerror = () => {
+          cacheImagens.logoCentro = criarFallbackLogo();
+          imagensCarregadas++;
+          if (imagensCarregadas === totalImagens) resolve();
+        };
+        cacheImagens.logoCentro.src = 'assets/logo2.png';
+        
+        // Carregar seta
+        cacheImagens.setaImg = new Image();
+        cacheImagens.setaImg.onload = () => {
+          imagensCarregadas++;
+          if (imagensCarregadas === totalImagens) resolve();
+        };
+        cacheImagens.setaImg.onerror = () => {
+          cacheImagens.setaImg = criarFallbackSeta();
+          imagensCarregadas++;
+          if (imagensCarregadas === totalImagens) resolve();
+        };
+        cacheImagens.setaImg.src = 'assets/seta.png';
+        
+        // Carregar imagens dos prêmios
+        premios.forEach((premio, index) => {
+          cacheImagens.premios[index] = new Image();
+          cacheImagens.premios[index].onload = () => {
+            imagensCarregadas++;
+            if (imagensCarregadas === totalImagens) resolve();
+          };
+          cacheImagens.premios[index].onerror = () => {
+            cacheImagens.premios[index] = criarFallbackPremio(index + 1);
+            imagensCarregadas++;
+            if (imagensCarregadas === totalImagens) resolve();
+          };
+          cacheImagens.premios[index].src = premio.img;
+        });
+      });
+    }
+
     // ✅ DESENHAR ROLETA
     function desenharRoleta() {
       ctx.clearRect(0, 0, canvas.width, canvas.height);
@@ -554,12 +573,12 @@
         ctx.fillStyle = corFatia;
         ctx.fill();
 
-        if (premio._imgObj && premio._imgObj.complete) {
+        if (cacheImagens.premios[i] && cacheImagens.premios[i].complete) {
           ctx.save();
           ctx.translate(raio, raio);
           ctx.rotate(inicio + anguloFatia / 2);
           const imgSize = premio.imgSize || 60;
-          ctx.drawImage(premio._imgObj, raio - espessuraBorda - imgSize - 12, -imgSize/2, imgSize, imgSize);
+          ctx.drawImage(cacheImagens.premios[i], raio - espessuraBorda - imgSize - 12, -imgSize/2, imgSize, imgSize);
           ctx.restore();
         }
       });
@@ -571,7 +590,7 @@
       ctx.strokeStyle = configuracoes.corBordaRoleta;
       ctx.stroke();
 
-      if (logoCentro.complete) {
+      if (cacheImagens.logoCentro && cacheImagens.logoCentro.complete) {
         const tamanhoLogo = 50;
         ctx.save();
         ctx.beginPath();
@@ -580,7 +599,7 @@
         ctx.fillStyle = "#ffffff";
         ctx.fill();
         ctx.clip();
-        ctx.drawImage(logoCentro, raio - tamanhoLogo/2, raio - tamanhoLogo/2, tamanhoLogo, tamanhoLogo);
+        ctx.drawImage(cacheImagens.logoCentro, raio - tamanhoLogo/2, raio - tamanhoLogo/2, tamanhoLogo, tamanhoLogo);
         ctx.restore();
       }
     }
@@ -659,36 +678,40 @@
       }
     }
 
-    // ✅ INICIALIZAÇÃO
-    function inicializar() {
-      premios.forEach((premio, index) => {
-        premio._imgObj = new Image();
-        premio._imgObj.onload = () => {
-          if (index === premios.length - 1) desenharRoleta();
-        };
-        premio._imgObj.onerror = () => {
-          premio._imgObj = criarFallbackPremio(index + 1);
-        };
-        premio._imgObj.src = premio.img;
-      });
-
-      logoCentro.onload = desenharRoleta;
-      logoCentro.onerror = () => {
-        logoCentro.src = 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNzAiIGhlaWdodD0iNzAiIHZpZXdCb3g9IjAgMCA3MCA3MCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPGNpcmNsZSBjeD0iMzUiIGN5PSIzNSIgcj0iMzAiIGZpbGw9IiNGRkYiLz4KPC9zdmc+';
-      };
-      logoCentro.src = 'assets/logo2.png';
-
-      setaImg.onerror = () => {
-        document.getElementById('seta-animada').src = 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNzAiIGhlaWdodD0iNzAiIHZpZXdCb3g9IjAgMCA3MCA3MCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHBhdGggZD0iTTQ1IDM1TDI1IDUwTDI1IDIwTDQ1IDM1WiIgZmlsbD0iI0ZGRiIvPgo8L3N2Zz4=';
-      };
-      setaImg.src = 'assets/seta.png';
-
-      document.getElementById('girar-btn').addEventListener('click', girarRoleta);
-      carregarConfiguracoes();
-      setInterval(carregarConfiguracoes, 3000);
+    // ✅ FALLBACKS PARA IMAGENS
+    function criarFallbackLogo() {
+      const canvas = document.createElement('canvas');
+      canvas.width = 70; canvas.height = 70;
+      const ctx = canvas.getContext('2d');
+      
+      ctx.fillStyle = '#FFFFFF';
+      ctx.beginPath();
+      ctx.arc(35, 35, 30, 0, 2 * Math.PI);
+      ctx.fill();
+      
+      const img = new Image();
+      img.src = canvas.toDataURL();
+      return img;
     }
 
-    // ✅ FALLBACK PARA IMAGENS
+    function criarFallbackSeta() {
+      const canvas = document.createElement('canvas');
+      canvas.width = 70; canvas.height = 70;
+      const ctx = canvas.getContext('2d');
+      
+      ctx.fillStyle = '#FFFFFF';
+      ctx.beginPath();
+      ctx.moveTo(45, 35);
+      ctx.lineTo(25, 50);
+      ctx.lineTo(25, 20);
+      ctx.closePath();
+      ctx.fill();
+      
+      const img = new Image();
+      img.src = canvas.toDataURL();
+      return img;
+    }
+
     function criarFallbackPremio(numero) {
       const canvas = document.createElement('canvas');
       canvas.width = 100; canvas.height = 100;
@@ -708,6 +731,25 @@
       const img = new Image();
       img.src = canvas.toDataURL();
       return img;
+    }
+
+    // ✅ INICIALIZAÇÃO
+    async function inicializar() {
+      // Carregar imagens persistentemente
+      await carregarImagensPersistentemente();
+      
+      // Atualizar a seta com a imagem carregada
+      document.getElementById('seta-animada').src = cacheImagens.setaImg.src;
+      
+      // Desenhar roleta inicial
+      desenharRoleta();
+      
+      // Configurar evento do botão
+      document.getElementById('girar-btn').addEventListener('click', girarRoleta);
+      
+      // Carregar configurações
+      carregarConfiguracoes();
+      setInterval(carregarConfiguracoes, 3000);
     }
 
     document.addEventListener('DOMContentLoaded', inicializar);
