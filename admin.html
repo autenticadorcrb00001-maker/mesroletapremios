@@ -317,14 +317,14 @@ function desenharRoleta() {
 
     // Logo central
     if (logoCentral.complete) {
-        const logoSize = 60;
+        const logoSize = 80;
         ctx.save();
         ctx.beginPath();
-        ctx.arc(raio, raio, logoSize / 2, 0, 2 * Math.PI);
+        ctx.arc(raio, raio, logoSize / 3, 0, 3 * Math.PI);
         ctx.fillStyle = configuracoes.cores.fundoLogoCentral;
         ctx.fill();
         ctx.clip();
-        ctx.drawImage(logoCentral, raio - logoSize / 2, raio - logoSize / 2, logoSize, logoSize);
+        ctx.drawImage(logoCentral, raio - logoSize / 3, raio - logoSize / 3, logoSize, logoSize);
         ctx.restore();
     }
 }
