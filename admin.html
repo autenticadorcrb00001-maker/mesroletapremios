@@ -297,14 +297,28 @@ function desenharRoleta() {
         ctx.fillStyle = i % 2 === 0 ? configuracoes.cores.fatiaPar : configuracoes.cores.fatiaImpar;
         ctx.fill();
 
-        // Imagem do prêmio
+        // Imagem do prêmio (configurável individualmente)
         const img = imagensPremios[i];
         if (img.complete) {
             const anguloMeio = inicio + anguloFatia / 2;
-            const distancia = raio * 0.65;
-            const x = raio + distancia * Math.cos(anguloMeio) - 20;
-            const y = raio + distancia * Math.sin(anguloMeio) - 20;
-            ctx.drawImage(img, x, y, 65, 65);
+
+            // CONFIGURAÇÃO INDIVIDUAL POR IMAGEM
+            const configuracoesImagem = [
+                { distancia: 0.55, tamanho: 60, offsetX: 0, offsetY: 0 },
+                { distancia: 0.60, tamanho: 70, offsetX: -5, offsetY: 5 },
+                { distancia: 0.65, tamanho: 65, offsetX: 0, offsetY: -5 },
+                { distancia: 0.58, tamanho: 60, offsetX: 5, offsetY: 0 },
+                { distancia: 0.62, tamanho: 75, offsetX: -10, offsetY: 0 },
+                { distancia: 0.57, tamanho: 65, offsetX: 0, offsetY: 5 }
+            ];
+
+            const cfgImg = configuracoesImagem[i] || { distancia: 0.6, tamanho: 60, offsetX: 0, offsetY: 0 };
+
+            const distancia = raio * cfgImg.distancia;
+            const x = raio + distancia * Math.cos(anguloMeio) - cfgImg.tamanho / 2 + cfgImg.offsetX;
+            const y = raio + distancia * Math.sin(anguloMeio) - cfgImg.tamanho / 2 + cfgImg.offsetY;
+
+            ctx.drawImage(img, x, y, cfgImg.tamanho, cfgImg.tamanho);
         }
     });
 
