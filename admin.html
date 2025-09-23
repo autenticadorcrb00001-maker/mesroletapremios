@@ -71,12 +71,13 @@
     }
     
     .descricao-adicional {
-      color: #f7f7f7;
+      color: #F7f7f7; /* COR ALTERADA PARA AMARELO DOURADO */
       text-align: center;
       margin-bottom: 6px;
       font-size: 1.3rem;
       font-weight: 500;
       line-height: 1.3;
+      text-shadow: 1px 1px 2px rgba(0,0,0,0.5); /* SOMBRA ADICIONADA */
     }
     
     .descricao-adicional:last-child {
@@ -101,6 +102,12 @@
       position: relative;
       display: inline-block;
       margin: 10px 0;
+      background-image: url('assets/fundo-roleta.jpg'); /* FUNDO ADICIONADO */
+      background-size: cover;
+      background-position: center;
+      background-repeat: no-repeat;
+      border-radius: 50%;
+      padding: 10px;
     }
     
     canvas {
@@ -110,6 +117,8 @@
       height: auto;
       /* ❌ BORDA REMOVIDA - era esta linha que causava a faixa vermelha */
       max-width: 350px;
+      position: relative;
+      z-index: 2;
     }
     
     /* ✅ SETA ANIMADA */
