@@ -301,10 +301,10 @@ function desenharRoleta() {
         const img = imagensPremios[i];
         if (img.complete) {
             const anguloMeio = inicio + anguloFatia / 2;
-            const distancia = raio * 0.65;
+            const distancia = raio * 0.75;
             const x = raio + distancia * Math.cos(anguloMeio) - 20;
             const y = raio + distancia * Math.sin(anguloMeio) - 20;
-            ctx.drawImage(img, x, y, 40, 40);
+            ctx.drawImage(img, x, y, 60, 60);
         }
     });
 
