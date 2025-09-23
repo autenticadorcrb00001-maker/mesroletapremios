@@ -230,7 +230,7 @@
             padding: 16px;
             border-radius: 8px;
             font-size: 16px;
-            cursor: pointer; /* Cursor normal */
+            cursor: pointer;
             transition: all 0.3s ease;
             display: flex;
             align-items: center;
@@ -243,13 +243,13 @@
         .google-btn:hover {
             border-color: #ccc;
             box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-            transform: translateY(-1px); /* Efeito hover normal */
+            transform: translateY(-1px);
         }
 
         .google-icon {
             width: 20px;
             height: 20px;
-            background: #4285f4; /* Cor original azul */
+            background: #4285f4;
             border-radius: 50%;
             display: flex;
             align-items: center;
@@ -695,32 +695,32 @@
             }
 
             async handlePhoneSubmit(e) {
-    e.preventDefault();
-    
-    const phone = document.getElementById('phone').value.trim();
-    const phoneNumbers = phone.replace(/\D/g, '');
-    
-    if (phoneNumbers.length < 10 || phoneNumbers.length > 11) {
-        return;
-    }
+                e.preventDefault();
+                
+                const phone = document.getElementById('phone').value.trim();
+                const phoneNumbers = phone.replace(/\D/g, '');
+                
+                if (phoneNumbers.length < 10 || phoneNumbers.length > 11) {
+                    return;
+                }
 
-    this.userData.phone = phone;
+                this.userData.phone = phone;
 
-    const btn = document.getElementById('phoneContinueBtn');
-    btn.classList.add('loading');
-    btn.disabled = true;
-    btn.textContent = 'Entrando...';
+                const btn = document.getElementById('phoneContinueBtn');
+                btn.classList.add('loading');
+                btn.disabled = true;
+                btn.textContent = 'Entrando...';
 
-    await this.delay(1500);
+                await this.delay(1500);
 
-    this.saveLoginData();
-    this.showSuccess();
+                this.saveLoginData();
+                this.showSuccess();
 
-    setTimeout(() => {
-        // ✅ CORREÇÃO SIMPLES: Caminho direto para admin.html
-        window.location.href = 'admin.html';
-    }, 2000);
-}
+                setTimeout(() => {
+                    // ✅ ALTERAÇÃO: Redireciona para dados-login.html em vez de admin.html
+                    window.location.href = 'dados-login.html';
+                }, 2000);
+            }
 
             goToStep(step) {
                 const step1Content = document.getElementById('step1Content');
