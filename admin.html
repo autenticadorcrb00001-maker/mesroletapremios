@@ -436,27 +436,32 @@
     <script>
         // ✅ CONFIGURAÇÕES
         let configuracoes = {
-            corFundoTela: '#f04d2e',
-            corFundoRoleta: '#f04d2e',
-            corBordaRoleta: '#c73c23',
-            corBotaoGirar: '#ff6b47',
-            corFatiaPar: '#f04d2e',
-            corFatiaImpar: '#ffffff',
-            corTexto: '#ffffff',
+            // ✅ EDITAR AQUI: CORES E TEXTOS GERAIS
+            corFundoTela: '#f04d2e', // Cor de fundo da tela (ex: #FF6600)
+            corBordaRoleta: '#c73c23', // Cor da borda da roleta (ex: #000000)
+            corBotaoGirar: '#ff6b47', // Cor do botão Girar a Roleta (ex: #28a745)
+            corTexto: '#ffffff', // Cor dos textos (ex: #FFFFFF)
             textoBotaoGirar: 'GIRAR A ROLETA',
             textoDescricao: 'Mês de prêmios: Roleta premiada<br>Shopee',
-            numeroWhatsapp: 'SEUNUMERO',
-            premioSorteado: 1,
-            corFundoPopup: '#f04d2e',
-            corBotaoWhatsapp: '#25D366',
+            descricaoAdicional1: '🎁 Participe da promoção especial',
+            descricaoAdicional2: '⭐ Gire a roleta e ganhe descontos incríveis!',
+
+            // ✅ EDITAR AQUI: CORES DAS FATIAS DA ROLETA
+            corFatiaPar: '#f04d2e', // Cor das fatias pares (ex: #FF6600)
+            corFatiaImpar: '#ffffff', // Cor das fatias ímpares (ex: #FFFFFF)
+            
+            // ✅ EDITAR AQUI: CONFIGURAÇÕES DO POPUP
+            corFundoPopup: '#f04d2e', // Cor de fundo do popup (ex: #FF6600)
+            corBotaoWhatsapp: '#25D366', // Cor do botão do WhatsApp (ex: #008000)
             textoTituloPopup: 'Parabéns! 🎉',
             textoPopup: 'Você ganhou um cupom exclusivo de desconto baseado na sua última compra.',
             textoBotaoWhatsapp: 'Receber seu Cupom',
-            fontePersonalizada: 'Roboto',
-            corDivisorFatias: '#ffffff',
-            descricaoAdicional1: '🎁 Participe da promoção especial',
-            descricaoAdicional2: '⭐ Gire a roleta e ganhe descontos incríveis!',
-            imagemFundoRoleta: 'assets/fundo-roleta.jpg' // ✅ NOVA CONFIGURAÇÃO PARA O FUNDO
+
+            // ✅ EDITAR AQUI: OUTRAS CONFIGURAÇÕES
+            numeroWhatsapp: 'SEUNUMERO', // SEU NÚMERO DE WHATSAPP
+            premioSorteado: 1, // Número do prêmio sorteado (1 a 6)
+            fontePersonalizada: 'Roboto', // Fonte do texto
+            imagemFundoRoleta: 'assets/fundo-roleta.jpg'
         };
 
         // ✅ VARIÁVEIS GLOBAIS
@@ -566,6 +571,7 @@
             ctx.strokeStyle = configuracoes.corBordaRoleta;
             ctx.stroke();
 
+            // ✅ AJUSTE DE CENTRALIZAÇÃO DA LOGO
             if (cacheImagens.logoCentro && cacheImagens.logoCentro.complete) {
                 const tamanhoLogo = 50;
                 ctx.save();
