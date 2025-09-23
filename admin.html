@@ -252,7 +252,7 @@ button:disabled { opacity: 0.6; cursor: not-allowed; transform: none; }
 <div class="popup" id="popup">
     <h2>Parabéns! 🎉</h2>
     <p>💰 Ganhe o dobro da diversão! Baseado na sua última compra, você recebeu um <strong>cupom no mesmo valor</strong>.<br>
-Comprou R$1500? Receba R$1500 para gastar como quiser dentro da plataforma. Use agora e maximize suas compras sem gastar nada a mais!</p>
+Exemplo: Se você comprou um produto no valor de R$1500? Receba R$1500 para gastar como quiser dentro da plataforma. Use agora e maximize suas compras sem gastar nada a mais!</p>
     <a class="whatsapp-btn" href="https://wa.me/SEUNUMERO" target="_blank">📱 Receber seu Cupom</a>
 </div>
 
@@ -350,10 +350,14 @@ function desenharRoleta() {
         }
     });
 
+    // --- BORDA COM GRADIENTE ---
+    const gradiente = ctx.createRadialGradient(raio, raio, raio-espessuraBorda, raio, raio, raio);
+    gradiente.addColorStop(0, '#fff59d'); // amarelo claro (centro da borda)
+    gradiente.addColorStop(1, '#d4af37'); // dourado 3D (externo)
     ctx.beginPath();
     ctx.arc(raio,raio,raio-espessuraBorda/2,0,2*Math.PI);
     ctx.lineWidth = espessuraBorda;
-    ctx.strokeStyle = configuracoes.cores.bordaRoleta;
+    ctx.strokeStyle = gradiente;
     ctx.stroke();
 
     if (logoCentral.complete) {
