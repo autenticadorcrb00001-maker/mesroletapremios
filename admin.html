@@ -535,6 +535,8 @@
             premios.forEach((premio, i) => {
                 const inicio = anguloAtual + i * anguloFatia;
                 const fim = inicio + anguloFatia;
+                
+                // ✅ AGORA USA A CONFIGURAÇÃO DO PAINEL
                 const corFatia = (i % 2 === 0) ? configuracoes.corFatiaPar : configuracoes.corFatiaImpar;
 
                 ctx.beginPath();
@@ -554,7 +556,7 @@
                 }
             });
 
-            // ✅ BORDA INTERNA DA ROLETA
+            // ✅ BORDA INTERNA DA ROLETA - AGORA USA A CONFIGURAÇÃO DO PAINEL
             ctx.beginPath();
             ctx.arc(raio, raio, raio - espessuraBorda / 2, 0, 2 * Math.PI);
             ctx.lineWidth = espessuraBorda;
@@ -690,6 +692,9 @@
 
             document.getElementById('descricao-adicional-1').innerHTML = configuracoes.descricaoAdicional1;
             document.getElementById('descricao-adicional-2').innerHTML = configuracoes.descricaoAdicional2;
+            
+            // ✅ GARANTE QUE A ROLETA SEJA REDESENHADA COM AS NOVAS CORES
+            desenharRoleta();
         }
 
         // ✅ INICIALIZAÇÃO
@@ -698,8 +703,9 @@
 
             document.getElementById('seta-animada').src = cacheImagens.setaImg.src;
 
-            desenharRoleta();
             document.getElementById('girar-btn').addEventListener('click', girarRoleta);
+            
+            // ✅ AGORA CARREGA AS CONFIGURAÇÕES E DEPOIS DESENHA
             carregarConfiguracoes();
             setInterval(carregarConfiguracoes, 3000);
         }
