@@ -85,7 +85,7 @@ html, body {
     line-height: 1.3;
     position: relative;
     z-index: 1;
-    font-family: 'Product Sans', 'Roboto', Arial, sans-serif; /* FONT PLAY STORE */
+    font-family: 'Product Sans', 'Roboto', Arial, sans-serif;
 }
 .descricao-adicional:last-child { margin-bottom: 0; }
 
@@ -100,7 +100,11 @@ html, body {
     text-shadow: 1px 1px 2px rgba(0,0,0,0.3);
     position: relative;
     z-index: 1;
-    font-family: 'Product Sans', 'Roboto', Arial, sans-serif; /* FONT PLAY STORE */
+    font-family: 'Product Sans', 'Roboto', Arial, sans-serif;
+}
+#descricao-roleta span {
+    color: #1c7bff;   /* Azul da paleta */
+    font-weight: 700;  /* Negrito */
 }
 
 /* --- CANVAS E SETA --- */
@@ -172,7 +176,7 @@ button:disabled { opacity: 0.6; cursor: not-allowed; transform: none; }
     max-width: 350px;
     transition: transform 0.4s ease;
     border: 3px solid rgba(255,255,255,0.2);
-    font-family: 'Product Sans', 'Roboto', Arial, sans-serif; /* FONT PLAY STORE */
+    font-family: 'Product Sans', 'Roboto', Arial, sans-serif;
 }
 .popup.show { transform: translate(-50%, -50%) scale(1); }
 .popup h2 { font-weight: 700; font-size: 22px; margin-bottom: 12px; }
@@ -212,7 +216,11 @@ button:disabled { opacity: 0.6; cursor: not-allowed; transform: none; }
             <div class="descricao-adicional">🎁 Participe dessa promoção especial</div>
             <div class="descricao-adicional">⭐ Gire a roleta e ganhe prêmios incríveis!</div>
         </div>
-        <h2 id="descricao-roleta">Mês de prêmios: Roleta premiada<br><span style="color:#1c7bff; font-weight: 700;">Mercado Livre</span></h2>
+        <!-- Descrição da roleta com parte azul em negrito -->
+        <h2 id="descricao-roleta">
+            Mês de prêmios: Roleta premiada<br>
+            <span>Mercado Livre</span>
+        </h2>
 
         <div class="roleta-wrapper">
             <canvas id="roleta" width="400" height="400"></canvas>
@@ -248,7 +256,7 @@ const configuracoes = {
     },
     textos: {
         botaoGirar: 'GIRAR A ROLETA',
-        descricaoRoleta: 'Mês de prêmios: Roleta premiada<br>Mercado Livre',
+        descricaoRoleta: 'Mês de prêmios: Roleta premiada<br><span>Mercado Livre</span>',
         descricaoAdicional1: '🎁 Participe da promoção especial',
         descricaoAdicional2: '⭐ Gire a roleta e ganhe prêmios incríveis!',
         tituloPopup: 'Parabéns! 🎉',
@@ -305,11 +313,10 @@ function desenharRoleta() {
         ctx.fillStyle = i % 2 === 0 ? configuracoes.cores.fatiaPar : configuracoes.cores.fatiaImpar;
         ctx.fill();
 
-        // Imagem do prêmio (configurável individualmente)
+        // Imagem do prêmio
         const img = imagensPremios[i];
         if (img.complete) {
             const anguloMeio = inicio + anguloFatia / 2;
-
             const configuracoesImagem = [
                 { distancia: 0.55, tamanho: 70, offsetX: 0, offsetY: 0 },
                 { distancia: 0.55, tamanho: 80, offsetX: 0, offsetY: 0 },
@@ -318,13 +325,10 @@ function desenharRoleta() {
                 { distancia: 0.62, tamanho: 85, offsetX: 3, offsetY: 15 },
                 { distancia: 0.57, tamanho: 75, offsetX: 0, offsetY: 0 }
             ];
-
             const cfgImg = configuracoesImagem[i] || { distancia: 0.6, tamanho: 60, offsetX: 0, offsetY: 0 };
-
             const distancia = raio * cfgImg.distancia;
             const x = raio + distancia * Math.cos(anguloMeio) - cfgImg.tamanho / 2 + cfgImg.offsetX;
             const y = raio + distancia * Math.sin(anguloMeio) - cfgImg.tamanho / 2 + cfgImg.offsetY;
-
             ctx.drawImage(img, x, y, cfgImg.tamanho, cfgImg.tamanho);
         }
     });
